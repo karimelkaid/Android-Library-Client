@@ -1,5 +1,7 @@
 package AndroidBooksClient.androidbooksclient;
 
+import static java.security.AccessController.getContext;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +29,20 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
         String bookTitle = books.get(position).getTitle();
-        Toast.makeText(holder.itemView.getContext(), bookTitle, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(holder.itemView.getContext(), bookTitle, Toast.LENGTH_SHORT).show();
         holder.getBookTitle().setText(bookTitle);
+
+        //tvBooks.setText("Hello, World!");
+        holder.getBookTitle().setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Toast.makeText(v.getContext(), "Hello, World!", Toast.LENGTH_SHORT).show();
+
+                        
+                    }
+                }
+        );
     }
 
     @Override
