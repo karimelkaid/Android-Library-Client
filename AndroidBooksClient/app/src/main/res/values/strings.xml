@@ -11,4 +11,6 @@
     <string name="book_title">"Book title : "</string>
     <string name="authors_name">"Author's name : "</string>
     <string name="a_book">A book</string>
+    <string name="back">Back</string>
+    <string name="title_book_information">title_book_information</string>
 </resources>

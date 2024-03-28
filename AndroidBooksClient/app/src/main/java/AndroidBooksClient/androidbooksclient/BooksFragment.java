@@ -71,12 +71,14 @@ public class BooksFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_books, container, false);
 
         recyclerView = view.findViewById(R.id.rv_books);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));   // Setting the layout manager for the RecyclerView
 
         BookAdapter bookAdapter = new BookAdapter();
-        bookAdapter.addBook(new Book("aaaaa", "vee", "vrevr"));
-        bookAdapter.addBook(new Book("bbbb", "vee", "vrevr"));
-        bookAdapter.addBook(new Book("ccccccc", "vee", "vrevr"));
+
+        // Adding “hard” books to the list of books in the RecyclerView Adapter (BookAdapter)
+        bookAdapter.addBook(new Book("War and Peace", "Leo Tolstoy", "Historical Novel"));
+        bookAdapter.addBook(new Book("It", "Stephen King", "Horror"));
+        bookAdapter.addBook(new Book("Noise", "F. Scott Fitzgerald", "Classic American Literature"));
 
         recyclerView.setAdapter(bookAdapter);
 
