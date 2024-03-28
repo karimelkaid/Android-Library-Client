@@ -3,6 +3,7 @@ package AndroidBooksClient.androidbooksclient;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,27 +13,30 @@ import java.util.List;
 
 import AndroidBooksClient.androidbooksclient.Book;
 
-public class BookAdapter extends RecyclerView.Adapter {
+public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
+
     List<Book> books = new ArrayList<>();
+
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_view_holder, parent, false);
-
-        books.add(new Book("manger", "Marc", "Une description"));
-        books.add(new Book("manger", "Marc", "Une description"));
-
         return new BookViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
         String bookTitle = books.get(position).getTitle();
-        ((BookViewHolder)holder).getBookTitle().setText("#"+position+" : "+bookTitle);
+        Toast.makeText(holder.itemView.getContext(), bookTitle, Toast.LENGTH_SHORT).show();
+        holder.getBookTitle().setText(bookTitle);
     }
 
     @Override
     public int getItemCount() {
         return books.size();
+    }
+
+    public void addBook(Book book) {
+        books.add(book);
     }
 }

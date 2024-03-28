@@ -10,7 +10,7 @@ public class BookViewHolder extends RecyclerView.ViewHolder{
     TextView bookTitle;
     public BookViewHolder(@NonNull View itemView) {
         super(itemView);
-        bookTitle = itemView.findViewById(R.id.tv_book);
+        bookTitle = itemView.findViewById(R.id.tv_books);
     }
 
     public TextView getBookTitle(){

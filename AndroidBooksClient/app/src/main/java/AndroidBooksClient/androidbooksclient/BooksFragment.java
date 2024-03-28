@@ -69,7 +69,13 @@ public class BooksFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv_books);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new BookAdapter());
+
+        BookAdapter bookAdapter = new BookAdapter();
+        bookAdapter.addBook(new Book("aaaaa", "vee", "vrevr"));
+        bookAdapter.addBook(new Book("bbbb", "vee", "vrevr"));
+        bookAdapter.addBook(new Book("ccccccc", "vee", "vrevr"));
+
+        recyclerView.setAdapter(bookAdapter);
 
         return view;
     }
