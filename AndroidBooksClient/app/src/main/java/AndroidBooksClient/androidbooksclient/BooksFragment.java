@@ -3,6 +3,9 @@ package AndroidBooksClient.androidbooksclient;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +16,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 /**
@@ -20,7 +25,7 @@ import java.util.ArrayList;
  * Use the {@link BooksFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BooksFragment extends Fragment {
+public class BooksFragment extends Fragment implements BookAddedListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,6 +37,7 @@ public class BooksFragment extends Fragment {
     private String mParam2;
 
     private RecyclerView recyclerView;
+    private BookAdapter bookAdapter;
 
     public BooksFragment() {
         // Required empty public constructor
@@ -73,7 +79,7 @@ public class BooksFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_books);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));   // Setting the layout manager for the RecyclerView
 
-        BookAdapter bookAdapter = new BookAdapter();
+        bookAdapter = new BookAdapter();
 
         Book.resetNextId(); // To have the same id for each book, whether you navigate to another fragment or not
 
@@ -84,6 +90,28 @@ public class BooksFragment extends Fragment {
 
         recyclerView.setAdapter(bookAdapter);
 
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT).show();
+                        //bookAdapter.addBook(new Book("New Book", "New Author", "New Genre"));
+                        navigateTo(R.id.action_navigation_books_to_navigation_addBook);
+                    }
+                }
+        );
+
         return view;
+    }
+
+    public void navigateTo(int actionId) {
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
+        navController.navigate(actionId);
+    }
+
+    @Override
+    public void onBookAdded(Book book) {
+        bookAdapter.addBook(book);
     }
 }

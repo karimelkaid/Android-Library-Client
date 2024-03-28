@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_books_to_navigation_bookInformation"
             app:destination="@id/navigation_bookInformation" />
+        <action
+            android:id="@+id/action_navigation_books_to_navigation_addBook"
+            app:destination="@id/navigation_addBook" />
     </fragment>
 
     <fragment
@@ -36,6 +39,16 @@
         android:name="AndroidBooksClient.androidbooksclient.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_addBook"
+        android:name="AndroidBooksClient.androidbooksclient.AddBookFragment"
+        android:label="@string/add_book"
+        tools:layout="@layout/fragment_add_book" >
+        <action
+            android:id="@+id/action_navigation_addBook_to_navigation_books"
+            app:destination="@id/navigation_books" />
+    </fragment>
 
     
 
