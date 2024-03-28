@@ -75,6 +75,8 @@ public class BooksFragment extends Fragment {
 
         BookAdapter bookAdapter = new BookAdapter();
 
+        Book.resetNextId(); // To have the same id for each book, whether you navigate to another fragment or not
+
         // Adding “hard” books to the list of books in the RecyclerView Adapter (BookAdapter)
         bookAdapter.addBook(new Book("War and Peace", "Leo Tolstoy", "Historical Novel"));
         bookAdapter.addBook(new Book("It", "Stephen King", "Horror"));

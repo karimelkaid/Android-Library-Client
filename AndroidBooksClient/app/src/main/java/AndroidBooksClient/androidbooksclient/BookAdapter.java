@@ -2,10 +2,14 @@ package AndroidBooksClient.androidbooksclient;
 
 import static java.security.AccessController.getContext;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,16 +38,18 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BookViewHolder holder, @SuppressLint("RecyclerView") int position) {
         String bookTitle = books.get(position).getTitle();
         //Toast.makeText(holder.itemView.getContext(), bookTitle, Toast.LENGTH_SHORT).show();
-        holder.getBookTitle().setText(bookTitle);
+        Button btn_book_title = holder.getBookTitle();
+        btn_book_title.setText(bookTitle);
 
-        holder.getBookTitle().setOnClickListener(
+        btn_book_title.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //Toast.makeText(v.getContext(), "Hello, World!", Toast.LENGTH_SHORT).show();
+                        saveBookInformations(v.getContext(), books.get(position));
                         navigateToBookInformation(v);   // Fragment change to BookInformation
                     }
                 }
@@ -68,6 +74,27 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
         books.add(book);
     }
 
+    /*
+        saveBookInformations : proc :
+            Saves the book informations in the shared preferences
+        Parameter(s) :
+            context : Context : The context of the application
+            book : Book : The book to save the informations of
+        Return :
+            void
+    */
+    public void saveBookInformations(Context context, Book book){
+        // Retrieve the shared preferences
+        SharedPreferences sharedPreferences = context.getSharedPreferences("BookInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Save the book informations
+        editor.putInt("id", book.getId());
+        editor.putString("title", book.getTitle());
+        editor.putString("author", book.getAuthor());
+
+        editor.apply();
+    }
 
     /*
         navigateToBookInformation : proc :

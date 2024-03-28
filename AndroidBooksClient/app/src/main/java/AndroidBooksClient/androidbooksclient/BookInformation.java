@@ -1,5 +1,7 @@
 package AndroidBooksClient.androidbooksclient;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +31,9 @@ public class BookInformation extends Fragment {
     private String mParam2;
 
     Button btn_back;
+    TextView tv_book_id;
+    TextView tv_book_title;
+    TextView tv_book_author;
 
     public BookInformation() {
         // Required empty public constructor
@@ -66,7 +72,7 @@ public class BookInformation extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_book_information, container, false);
 
-        btn_back = view.findViewById(R.id.btn_back_book_information);
+        findComponents(view);
         btn_back.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -77,7 +83,45 @@ public class BookInformation extends Fragment {
                 }
         );
 
+
+        // Updating text views with the book information
+        updateBookInformation();
+
+
         return view;
+    }
+
+    /*
+        findComponents : proc :
+            Finds the components of the layout
+        Parameter(s) :
+            view : View : The view to find the components in
+        Return :
+            void
+    */
+    private void findComponents(View view) {
+        // Retrieving the layout components for this fragment
+        btn_back = view.findViewById(R.id.btn_back_book_information);
+
+        tv_book_id = view.findViewById(R.id.tv_bood_id);
+        tv_book_title = view.findViewById(R.id.tv_book_title);
+        tv_book_author = view.findViewById(R.id.tv_author_name);
+    }
+
+    /*
+        updateBookInformation : proc :
+            Updates the book information in the text views
+        Parameter(s) :
+            None
+        Return :
+            void
+    */
+    public void updateBookInformation() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("BookInfo", Context.MODE_PRIVATE);
+
+        tv_book_id.setText( "ID : " + sharedPreferences.getInt("id", -1) );
+        tv_book_title.setText("Title : "+sharedPreferences.getString("title", ""));
+        tv_book_author.setText( "Author\'s name : " + sharedPreferences.getString("author", "") );
     }
 
 }

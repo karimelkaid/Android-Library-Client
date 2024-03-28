@@ -16,6 +16,19 @@ public class Book {
         this.description = description;
     }
 
+    /*
+        resetNextId : proc :
+            Resets the nextId attribute to 0
+        Parameter(s) :
+            None
+        Return :
+            void
+    */
+    public static void resetNextId() {
+        nextId = 0;
+    }
+
+    // Getters and Setters
     public int getId() {
         return id;
     }
