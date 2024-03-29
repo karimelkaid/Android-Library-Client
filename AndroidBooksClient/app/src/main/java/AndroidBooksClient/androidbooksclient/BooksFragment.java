@@ -86,7 +86,7 @@ public class BooksFragment extends Fragment{
         // ViewModel
         booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
         booksViewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
-            // Update adapter with new list of books
+            // Update adapter with new list of books when the LiveData changes
             bookAdapter.setBooks(books);
         });
 
