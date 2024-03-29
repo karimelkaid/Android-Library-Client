@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -31,9 +32,16 @@ public class BookInformation extends Fragment {
     private String mParam2;
 
     Button btn_back;
+    Button btn_delete_book;
     TextView tv_book_id;
     TextView tv_book_title;
     TextView tv_book_author;
+
+    private int bookId;
+    private String bookTitle;
+    private String author;
+
+    BooksViewModel booksViewModel;
 
     public BookInformation() {
         // Required empty public constructor
@@ -72,7 +80,10 @@ public class BookInformation extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_book_information, container, false);
 
+        booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
+
         findComponents(view);
+        getBookInformations();
         btn_back.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -83,12 +94,24 @@ public class BookInformation extends Fragment {
                 }
         );
 
+        setUpDeleteBookButton(this.bookId);
+
+
+
 
         // Updating text views with the book information
         updateBookInformation();
 
 
         return view;
+    }
+
+    public void getBookInformations() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("BookInfo", Context.MODE_PRIVATE);
+
+        this.bookId = sharedPreferences.getInt("id", -1);
+        this.bookTitle = sharedPreferences.getString("title", "");
+        this.author = sharedPreferences.getString("author", "");
     }
 
     /*
@@ -106,6 +129,7 @@ public class BookInformation extends Fragment {
         tv_book_id = view.findViewById(R.id.tv_bood_id);
         tv_book_title = view.findViewById(R.id.tv_book_title);
         tv_book_author = view.findViewById(R.id.tv_author_name);
+        btn_delete_book = view.findViewById(R.id.btn_delete_book);
     }
 
     /*
@@ -117,11 +141,36 @@ public class BookInformation extends Fragment {
             void
     */
     public void updateBookInformation() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("BookInfo", Context.MODE_PRIVATE);
 
-        tv_book_id.setText( "ID : " + sharedPreferences.getInt("id", -1) );
-        tv_book_title.setText("Title : "+sharedPreferences.getString("title", ""));
-        tv_book_author.setText( "Author\'s name : " + sharedPreferences.getString("author", "") );
+        tv_book_id.setText( "ID : " + this.bookId );
+        tv_book_title.setText("Title : "+ this.bookTitle);
+        tv_book_author.setText( "Author\'s name : " + this.author );
     }
+
+    public void setUpDeleteBookButton(int bookId){
+        btn_delete_book.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        booksViewModel.deleteBook(bookId);
+                        navigateTo(R.id.action_navigation_bookInformation_to_navigation_books);
+                    }
+                }
+        );
+    }
+
+    /*
+    navigateTo : proc :
+        Navigates to the specified action
+    Parameter(s) :
+        actionId : int : The id of the action to navigate to
+    Return :
+        void
+*/
+    public void navigateTo(int actionId) {
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
+        navController.navigate(actionId);
+    }
+
 
 }
