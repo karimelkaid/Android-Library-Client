@@ -3,6 +3,7 @@ package AndroidBooksClient.androidbooksclient;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
  * Use the {@link BooksFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BooksFragment extends Fragment implements BookAddedListener{
+public class BooksFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,6 +39,9 @@ public class BooksFragment extends Fragment implements BookAddedListener{
 
     private RecyclerView recyclerView;
     private BookAdapter bookAdapter;
+    private BooksViewModel booksViewModel;
+    private FloatingActionButton fab;
+
 
     public BooksFragment() {
         // Required empty public constructor
@@ -79,39 +83,43 @@ public class BooksFragment extends Fragment implements BookAddedListener{
         recyclerView = view.findViewById(R.id.rv_books);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));   // Setting the layout manager for the RecyclerView
 
-        bookAdapter = new BookAdapter();
+        // ViewModel
+        booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
+        booksViewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
+            // Update adapter with new list of books
+            bookAdapter.setBooks(books);
+        });
 
-        Book.resetNextId(); // To have the same id for each book, whether you navigate to another fragment or not
-
-        // Adding “hard” books to the list of books in the RecyclerView Adapter (BookAdapter)
-        bookAdapter.addBook(new Book("War and Peace", "Leo Tolstoy", "Historical Novel"));
-        bookAdapter.addBook(new Book("It", "Stephen King", "Horror"));
-        bookAdapter.addBook(new Book("Noise", "F. Scott Fitzgerald", "Classic American Literature"));
+        bookAdapter = new BookAdapter(booksViewModel.getBooks().getValue());
 
         recyclerView.setAdapter(bookAdapter);
 
-        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT).show();
-                        //bookAdapter.addBook(new Book("New Book", "New Author", "New Genre"));
+                        //Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT).show();
                         navigateTo(R.id.action_navigation_books_to_navigation_addBook);
                     }
                 }
         );
 
+
         return view;
     }
 
+    /*
+        navigateTo : proc :
+            Navigates to the specified action
+        Parameter(s) :
+            actionId : int : The id of the action to navigate to
+        Return :
+            void
+    */
     public void navigateTo(int actionId) {
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
         navController.navigate(actionId);
     }
 
-    @Override
-    public void onBookAdded(Book book) {
-        bookAdapter.addBook(book);
-    }
 }

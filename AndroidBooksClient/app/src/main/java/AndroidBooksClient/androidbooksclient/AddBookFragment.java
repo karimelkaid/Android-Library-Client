@@ -3,6 +3,9 @@ package AndroidBooksClient.androidbooksclient;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,8 @@ public class AddBookFragment extends Fragment {
     private Button _btn_add_book;
     private EditText _et_book_title;
     private EditText _et_book_author;
+
+    private BooksViewModel booksViewModel;
 
     public AddBookFragment() {
         // Required empty public constructor
@@ -67,6 +72,9 @@ public class AddBookFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_book, container, false);
 
+        // Getting the ViewModel
+        booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
+
         findComponents(view);
         _btn_add_book.setOnClickListener(
                 new View.OnClickListener() {
@@ -77,10 +85,13 @@ public class AddBookFragment extends Fragment {
                         String author = _et_book_author.getText().toString();
 
                         // Creating a new book object
-                        Book newBook = new Book(title, author, "a description");
+                        Book newBook = new Book(BooksViewModel.getNextId(), title, author, "a description");
 
                         // Adding the book to the list of books
+                        booksViewModel.addBook(newBook);
 
+                        // Back to the previous fragment
+                        navigateTo(R.id.action_navigation_addBook_to_navigation_books);
                     }
                 }
         );
@@ -95,12 +106,26 @@ public class AddBookFragment extends Fragment {
         view : View : The view to find the components in
     Return :
         void
-*/
+    */
     private void findComponents(View view) {
         // Retrieving the layout components for this fragment
         _btn_add_book = view.findViewById(R.id.btn_add_book);
         _et_book_title = view.findViewById(R.id.et_title);
         _et_book_author = view.findViewById(R.id.et_author);
     }
+
+    /*
+        navigateTo : proc :
+            Navigates to the specified action
+        Parameter(s) :
+            actionId : int : The id of the action to navigate to
+        Return :
+            void
+     */
+    public void navigateTo(int actionId) {
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
+        navController.navigate(actionId);
+    }
+
 
 }

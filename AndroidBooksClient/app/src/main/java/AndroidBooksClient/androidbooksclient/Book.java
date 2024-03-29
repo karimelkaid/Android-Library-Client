@@ -1,31 +1,17 @@
 package AndroidBooksClient.androidbooksclient;
 
 public class Book {
-    private static int nextId = 0;
     private int id;
 
     private String title;
     private String author;
     private String description;
 
-    public Book(String title, String author, String description) {
-        this.id = nextId;
-        nextId++;
+    public Book(int id, String title, String author, String description) {
+        this.id = id;
         this.title = title;
         this.author = author;
         this.description = description;
-    }
-
-    /*
-        resetNextId : proc :
-            Resets the nextId attribute to 0
-        Parameter(s) :
-            None
-        Return :
-            void
-    */
-    public static void resetNextId() {
-        nextId = 0;
     }
 
     // Getters and Setters

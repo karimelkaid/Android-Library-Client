@@ -16,6 +16,7 @@ public class Author {
         this.books = new ArrayList<>();
     }
 
+    // Getters and Setters
     public int getId() {
         return id;
     }

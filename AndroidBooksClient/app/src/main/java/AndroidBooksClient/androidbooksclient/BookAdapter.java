@@ -28,7 +28,11 @@ import AndroidBooksClient.androidbooksclient.Book;
 
 public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
 
-    List<Book> books = new ArrayList<>();
+    List<Book> books;
+
+    public BookAdapter(List<Book> books) {
+        this.books = books;
+    }
 
     @NonNull
     @Override
@@ -107,5 +111,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
     public void navigateToBookInformation(View v){
         NavController navController = Navigation.findNavController((Activity) v.getContext(), R.id.nav_host_fragment_activity_main);
         navController.navigate(R.id.action_navigation_books_to_navigation_bookInformation);
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }
