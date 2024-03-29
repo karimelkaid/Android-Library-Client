@@ -32,15 +32,19 @@ public class BooksViewModel extends AndroidViewModel {
             void
     */
     private void loadData() {
-        // Simulate loading data from a server
+        //
         List<Book> books = new ArrayList<>();
-        books.add(new Book(nextId, "War and Peace", "Leo Tolstoy", "Historical Novel"));
-        nextId++;
-        books.add(new Book(nextId, "It", "Stephen King", "Horror"));
-        nextId++;
+
+
+
         // Ajoutez plus de livres si nécessaire
         booksLiveData.setValue(books);
     }
+
+    public void fetchBooksAndSave(){
+        
+    }
+
     /*
         getBooks : func :
             Get the list of books
