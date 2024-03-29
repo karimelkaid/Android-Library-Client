@@ -85,15 +85,18 @@ public class BooksFragment extends Fragment{
 
         // ViewModel
         booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
-        booksViewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
-            // Update adapter with new list of books when the LiveData changes
-            bookAdapter.setBooks(books);
-        });
-
         bookAdapter = new BookAdapter(booksViewModel.getBooks().getValue());
+        booksViewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
+            // Instanciate the adapter with the list of books when the list is updated (because request is asynchronous)
+            bookAdapter = new BookAdapter(books);
 
-        recyclerView.setAdapter(bookAdapter);
+            // Set the books in the adapter
+            bookAdapter.setBooks(books);
 
+            // Set the adapter to the RecyclerView
+            recyclerView.setAdapter(bookAdapter);
+        });
+        /*
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(
                 new View.OnClickListener() {
@@ -103,7 +106,7 @@ public class BooksFragment extends Fragment{
                         navigateTo(R.id.action_navigation_books_to_navigation_addBook);
                     }
                 }
-        );
+        );*/
 
 
         return view;

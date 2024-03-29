@@ -21,6 +21,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +32,9 @@ import AndroidBooksClient.androidbooksclient.Book;
 
 public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
 
-    List<Book> books;
+    JSONArray books;
 
-    public BookAdapter(List<Book> books) {
+    public BookAdapter(JSONArray books) {
         this.books = books;
     }
 
@@ -42,27 +46,20 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BookViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        String bookTitle = books.get(position).getTitle();
-        //Toast.makeText(holder.itemView.getContext(), bookTitle, Toast.LENGTH_SHORT).show();
-        Button btn_book_title = holder.getBookTitle();
-        btn_book_title.setText(bookTitle);
+    public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
+        try
+        {
+            JSONObject booksJSONObject = books.getJSONObject(position);
+            String pokemonDetails = booksJSONObject.getString("title");
+            holder.getBookTitle().setText(pokemonDetails);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        btn_book_title.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //Toast.makeText(v.getContext(), "Hello, World!", Toast.LENGTH_SHORT).show();
-                        saveBookInformations(v.getContext(), books.get(position));
-                        navigateToBookInformation(v);   // Fragment change to BookInformation
-                    }
-                }
-        );
     }
-
     @Override
     public int getItemCount() {
-        return books.size();
+        return books.length();
     }
 
 
@@ -74,9 +71,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
         Return :
             void
     */
-    public void addBook(Book book) {
+    /*public void addBook(Book book) {
         books.add(book);
-    }
+    }*/
 
     /*
         saveBookInformations : proc :
@@ -113,7 +110,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
         navController.navigate(R.id.action_navigation_books_to_navigation_bookInformation);
     }
 
-    public void setBooks(List<Book> books) {
+    public void setBooks(JSONArray books) {
         this.books = books;
     }
 }
