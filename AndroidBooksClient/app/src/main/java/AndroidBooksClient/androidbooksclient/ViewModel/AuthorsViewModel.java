@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.Model.Book;
@@ -29,7 +30,7 @@ import AndroidBooksClient.androidbooksclient.Model.Book;
 public class AuthorsViewModel extends AndroidViewModel {
     MutableLiveData<List<Author>> authorsLiveData;
     RequestQueue queue;
-    private static final String adr_ip_pc_on_the_network = "192.168.27.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.1.9";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
 
     public AuthorsViewModel(@NonNull Application application) {
         super(application);
@@ -71,9 +72,10 @@ public class AuthorsViewModel extends AndroidViewModel {
             try {
                 JSONObject authorJsonObject = response.getJSONObject(i);
                 // Create a new author object from the JSON object and add it to the list of authors
-                Author newAuthor = translateJsonObjectToAnAuthorObject(authorJsonObject);
-                addAuthorToList(newAuthor);
+                translateJsonObjectToAnAuthorObject(authorJsonObject);
             } catch (JSONException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -86,17 +88,8 @@ public class AuthorsViewModel extends AndroidViewModel {
         authorsLiveData.setValue(authors);
     }
 
-    private Author translateJsonObjectToAnAuthorObject(JSONObject authorJsonObject) throws JSONException {
-        List<Book> books_of_author = get_books_of_author(getApplication(), authorJsonObject.getInt("int"));
-
-        Author newAuthor = new Author(authorJsonObject.getInt("id"), authorJsonObject.getString("fistname"), authorJsonObject.getString("lastname"), new ArrayList<>(books_of_author)  );
-        return newAuthor;
-    }
-
-    public List<Book> get_books_of_author(Context context, int author_id) {
-        List<Book> res = new ArrayList<>();
-
-        String url = "http://"+ this.adr_ip_pc_on_the_network +":3000/authors/"+ author_id +"/books";
+    private void translateJsonObjectToAnAuthorObject(JSONObject authorJsonObject) throws JSONException, InterruptedException {
+        String url = "http://"+ this.adr_ip_pc_on_the_network +":3000/authors/"+ authorJsonObject.getInt("id") +"/books";
 
         JsonArrayRequest request = new JsonArrayRequest(
                 Request.Method.GET,
@@ -105,30 +98,37 @@ public class AuthorsViewModel extends AndroidViewModel {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        List<Book> books_of_author = new ArrayList<>();
                         // Add the books to the list of books of the author
                         for(int i=0; i<response.length(); i++){
                             try {
                                 JSONObject current_json_object_book = response.getJSONObject(i);
                                 Book current_book = translateJsonObjectToABookObject(current_json_object_book);
-                                res.add(current_book);
+                                books_of_author.add(current_book);
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
+                        }
+                        // Create a new author object from the JSON object and add it to the list of authors
+                        try {
+                            Author author = new Author(authorJsonObject.getInt("id"), authorJsonObject.getString("firstname"), authorJsonObject.getString("lastname"), books_of_author);
+                            addAuthorToList(author);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplication(), "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
                         Log.e("AuthorsViewModel", "Error: " + error.toString());
+
                     }
                 }
         );
 
         queue.add(request);
-
-        return res;
     }
 
     /*
