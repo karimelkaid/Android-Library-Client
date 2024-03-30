@@ -4,22 +4,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.R;
+import AndroidBooksClient.androidbooksclient.Utils;
+import AndroidBooksClient.androidbooksclient.ViewModel.AuthorsViewModel;
+import AndroidBooksClient.androidbooksclient.ViewModel.SharedViewModel;
 
 public class AuthorAdapter extends RecyclerView.Adapter<AuthorViewHolder> {
     List<Author> authors;
+    private SharedViewModel sharedViewModel;
 
-    public AuthorAdapter(List<Author> authors) {
+    public AuthorAdapter(List<Author> authors, SharedViewModel sharedViewModel) {
         this.authors = authors;
+        this.sharedViewModel = sharedViewModel;
     }
 
     @NonNull
@@ -36,16 +41,19 @@ public class AuthorAdapter extends RecyclerView.Adapter<AuthorViewHolder> {
         Button btn_author = holder.get_btn_author_name();
         btn_author.setText(current_author.getLast_name());
 
-        setUpAuthorInformationButton(btn_author);
+        setUpAuthorInformationButton(btn_author, current_author);
     }
 
-    public void setUpAuthorInformationButton(Button btn_author) {
+    public void setUpAuthorInformationButton(Button btn_author, Author author) {
         btn_author.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // Display the author's information
-                        Toast.makeText(v.getContext(), "to configure", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(v.getContext(), "to configure", Toast.LENGTH_SHORT).show();
+                        //Utils.saveAuthorInformations(v.getContext(), "Author"+author.getId()+"Datas", author);
+                        sharedViewModel.setSelectedAuthor(author);
+                        Utils.navigateTo(v.getContext(), R.id.action_navigation_authors_to_navigation_author_informations);
                     }
                 }
         );

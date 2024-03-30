@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.ViewModel.AuthorsViewModel;
+import AndroidBooksClient.androidbooksclient.ViewModel.SharedViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +33,7 @@ public class AuthorsFragment extends Fragment {
     private String mParam2;
 
     private AuthorAdapter authorAdapter;
+    private SharedViewModel sharedViewModel;
 
     public AuthorsFragment() {
         // Required empty public constructor
@@ -77,9 +79,12 @@ public class AuthorsFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.rv_authors);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
+        // Retrieving the SharedViewModel to give for the AuthorAdapter
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
         // Setting the adapter when the authorsLiveData changes
         authorsViewModel.get_authors_live_data().observe(getViewLifecycleOwner(), authors -> {
-            authorAdapter = new AuthorAdapter(authors);
+            authorAdapter = new AuthorAdapter(authors, sharedViewModel);
             recyclerView.setAdapter(authorAdapter);
         });
 

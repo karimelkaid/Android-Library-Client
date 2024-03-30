@@ -25,7 +25,7 @@ public class Author {
         this.id = id;
     }
 
-    public String getFist_name() {
+    public String getFirst_name() {
         return fist_name;
     }
 

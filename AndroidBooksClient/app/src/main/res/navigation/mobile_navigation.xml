@@ -49,6 +49,19 @@
         android:name="AndroidBooksClient.androidbooksclient.View.AuthorsFragment"
         android:label="@string/authors"
         tools:layout="@layout/fragment_authors">
+        <action
+            android:id="@+id/action_navigation_authors_to_navigation_author_informations"
+            app:destination="@id/navigation_author_informations" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_author_informations"
+        android:name="AndroidBooksClient.androidbooksclient.View.AuthorInformationFragment"
+        android:label="@string/author_informations"
+        tools:layout="@layout/fragment_author_information">
+        <action
+            android:id="@+id/action_navigation_author_informations_to_navigation_authors"
+            app:destination="@id/navigation_authors" />
     </fragment>
 
 
