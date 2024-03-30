@@ -13,6 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import AndroidBooksClient.androidbooksclient.Model.Book;
 import AndroidBooksClient.androidbooksclient.ViewModel.BooksViewModel;
 import AndroidBooksClient.androidbooksclient.R;
 
@@ -34,7 +38,8 @@ public class AddBookFragment extends Fragment {
 
     private Button _btn_add_book;
     private EditText _et_book_title;
-    private EditText _et_book_author;
+    private EditText _et_book_publication_year;
+    private EditText _et_book_author_id;
 
     private BooksViewModel booksViewModel;
 
@@ -79,27 +84,56 @@ public class AddBookFragment extends Fragment {
         booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
 
         findComponents(view);
-        /*_btn_add_book.setOnClickListener(
+        setUpAddBookButton();
+
+        return view;
+    }
+
+    /*
+        setUpAddBookButton : proc :
+            Sets up the add book button
+        Parameter(s) :
+            none
+        Return :
+            void
+    */
+    public void setUpAddBookButton() {
+        _btn_add_book.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // Retrieving information from the EditTexts
                         String title = _et_book_title.getText().toString();
-                        String author = _et_book_author.getText().toString();
+                        int publicationYear;
+                        if( !_et_book_publication_year.getText().toString().equals("") )
+                        {
+                            publicationYear = Integer.parseInt(_et_book_publication_year.getText().toString());
+                        }
+                        else{
+                            publicationYear = -1;
+                        }
+                        int authorId = Integer.parseInt(_et_book_author_id.getText().toString());
 
-                        // Creating a new book object
-                        Book newBook = new Book(BooksViewModel.getNextId(), title, author, "a description");
+                        // Creating a JSON object to send to the server
+                        JSONObject book_json_object = new JSONObject();
+                        try {
+                            book_json_object.put("title", title);
+                            // If the publication year is not -1, it is specified by the user so we add it to the JSON object
+                            if( publicationYear != -1 ){
+                                book_json_object.put("publication_year", publicationYear);
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
 
-                        // Adding the book to the list of books
-                        booksViewModel.addBook(newBook);
+                        // Adding the book to the server and locally
+                        booksViewModel.addBook(authorId, book_json_object);
 
                         // Back to the previous fragment
                         navigateTo(R.id.action_navigation_addBook_to_navigation_books);
                     }
                 }
-        );*/
-
-        return view;
+        );
     }
 
     /*
@@ -114,7 +148,8 @@ public class AddBookFragment extends Fragment {
         // Retrieving the layout components for this fragment
         _btn_add_book = view.findViewById(R.id.btn_add_book);
         _et_book_title = view.findViewById(R.id.et_title);
-        _et_book_author = view.findViewById(R.id.et_author);
+        _et_book_publication_year = view.findViewById(R.id.et_publication_year);
+        _et_book_author_id = view.findViewById(R.id.et_author_id);
     }
 
     /*

@@ -93,8 +93,22 @@ public class BooksFragment extends Fragment{
             // Set the adapter to the RecyclerView
             recyclerView.setAdapter(bookAdapter);
         });
-        /*
-        fab = view.findViewById(R.id.fab);
+
+        findComponents(view);
+        setUpFab();
+
+        return view;
+    }
+
+    /*
+        setUpFab : proc :
+            Sets up the floating action button
+        Parameter(s) :
+            None
+        Return :
+            void
+     */
+    public void setUpFab() {
         fab.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -103,11 +117,22 @@ public class BooksFragment extends Fragment{
                         navigateTo(R.id.action_navigation_books_to_navigation_addBook);
                     }
                 }
-        );*/
-
-
-        return view;
+        );
     }
+
+    /*
+        findComponents : proc :
+            Find the components in the view
+        Parameter(s) :
+            view : View : The view to find the components in
+        Return :
+            void
+     */
+    public void findComponents(View view){
+        fab = view.findViewById(R.id.fab);
+    }
+
+
 
     /*
         navigateTo : proc :

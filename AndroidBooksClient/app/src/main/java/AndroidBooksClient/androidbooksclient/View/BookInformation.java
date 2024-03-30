@@ -89,7 +89,7 @@ public class BookInformation extends Fragment {
 
         findComponents(view);
         getBookInformations();
-        setUpBackButton(btn_back);
+        setUpBackButton();
 
         setUpDeleteBookButton(this.book_id);
         // Updating text views with the book information
@@ -103,11 +103,11 @@ public class BookInformation extends Fragment {
         setUpBackButton : proc :
             Sets up the back button to navigate to the Books fragment
         Parameter(s) :
-            btnBack : Button : The button to set up
+            None
         Return :
             void
     */
-    public void setUpBackButton(Button btnBack) {
+    public void setUpBackButton() {
         btn_back.setOnClickListener(
                 new View.OnClickListener() {
                     @Override

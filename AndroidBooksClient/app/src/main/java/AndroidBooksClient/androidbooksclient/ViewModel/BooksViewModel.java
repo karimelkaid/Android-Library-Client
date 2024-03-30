@@ -14,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -31,6 +32,7 @@ public class BooksViewModel extends AndroidViewModel {
     private final MutableLiveData<List<Book>> booksLiveData;
     //private static int nextId = 1;
     RequestQueue queue;
+    private String adr_ip_pc_on_the_network = "192.168.140.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
 
     public BooksViewModel(@NonNull Application application) {
         super(application);
@@ -53,7 +55,7 @@ public class BooksViewModel extends AndroidViewModel {
             void
     */
     private void loadData(Context context) {
-        String url = "http://192.168.1.9:3000/books";
+        String url = "http://"+ this.adr_ip_pc_on_the_network +":3000/books";
 
         JsonArrayRequest request = new JsonArrayRequest(
                 Request.Method.GET,
@@ -62,7 +64,7 @@ public class BooksViewModel extends AndroidViewModel {
                 new Response.Listener<JSONArray>() { // Utiliser JSONArray ici
                     @Override
                     public void onResponse(JSONArray response) {
-                        handleResponse(context, response);
+                        handleResponseLoadData(context, response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -78,7 +80,7 @@ public class BooksViewModel extends AndroidViewModel {
     }
 
     /*
-        handleResponse : proc :
+        handleResponseLoadData : proc :
             Handle the response from the server
         Parameter(s) :
             context : Context : The context of the application
@@ -86,20 +88,34 @@ public class BooksViewModel extends AndroidViewModel {
         Return :
             void
     */
-    public void handleResponse(Context context, JSONArray response){
-        Toast.makeText(context, "Response: " + response.toString(), Toast.LENGTH_SHORT).show();
+    public void handleResponseLoadData(Context context, JSONArray response){
         Log.d("BooksViewModel", "Response: " + response.toString());
         //booksLiveData.setValue(response);
         for( int i=0; i<response.length(); i++ ){
             try {
                 JSONObject bookJsonObject = response.getJSONObject(i);
                 // Create a new book object from the JSON object and add it to the list of books
-                Book newBook = new Book(bookJsonObject.getInt("id"), bookJsonObject.getString("title"), bookJsonObject.getInt("publication_year"), bookJsonObject.getInt("authorId"));
-                addBook(newBook);
+                Book newBook = translateJsonObjectToABookObject(bookJsonObject);
+                addBookToList(newBook);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
         }
+        Toast.makeText(context, "Books loaded from the API !", Toast.LENGTH_SHORT).show();
+    }
+
+    /*
+        addBookToList : proc :
+            Add a book to the list of books
+        Parameter(s) :
+            newBook : Book : The book to add
+        Return :
+            void
+    */
+    public void addBookToList(Book newBook) {
+        List<Book> books = booksLiveData.getValue();
+        books.add(newBook);
+        booksLiveData.setValue(books);
     }
 
     /*
@@ -114,18 +130,69 @@ public class BooksViewModel extends AndroidViewModel {
         return booksLiveData;
     }
 
+
     /*
         addBook : proc :
-            Add a book to the list of books
+            Add a book to the server and locally
         Parameter(s) :
-            newBook : Book : The book to add
+            author_id : int : The id of the author of the book to add
+            book_json_object : JSONObject : The JSON object representing the book
         Return :
             void
     */
-    public void addBook(Book newBook) {
-        List<Book> books = booksLiveData.getValue();
-        books.add(newBook);
-        booksLiveData.setValue(books);
+    public void addBook(int author_id, JSONObject book_json_object) {
+        String url = "http://"+ this.adr_ip_pc_on_the_network +":3000/authors/"+ author_id +"/books";
+
+        // Create a new JsonObjectRequest
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, book_json_object, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("BooksViewModel", "Response: " + response.toString());
+                        // Add the book to the local list and update the LiveData
+                        Book newBook = null;
+                        try {
+                            newBook = translateJsonObjectToABookObject(response);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        addBookToList(newBook);
+                        Toast.makeText(getApplication(), "Book added !", Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        Log.e("BooksViewModel", "Error: " + error.toString());
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        queue.add(jsonObjectRequest);
+    }
+
+    /*
+        translateJsonObjectToABookObject : func :
+            Translate a JSON object to a Book object
+        Parameter(s) :
+            book_json_object : JSONObject : The JSON object to translate
+        Return :
+            Book : The Book object
+    */
+    public Book translateJsonObjectToABookObject(JSONObject book_json_object) throws JSONException {
+        Book newBook = null;
+        if(book_json_object.isNull("publication_year") )
+        {
+            // Create a new book object from the JSON object with the constructor that does not take the publication year
+            newBook = new Book(book_json_object.getInt("id"), book_json_object.getString("title"), book_json_object.getInt("authorId"));
+        }
+        else{
+            // Create a new book object from the JSON object with the constructor that takes the publication year
+            newBook = new Book(book_json_object.getInt("id"), book_json_object.getString("title"), book_json_object.getInt("publication_year"), book_json_object.getInt("authorId"));
+        }
+        return newBook;
     }
 
     /*
@@ -137,7 +204,7 @@ public class BooksViewModel extends AndroidViewModel {
             void
     */
     public void deleteBook(int bookId){
-        deleteBookInServer(bookId);
+        deleteBookFromServer(bookId);
         deleteBookLocally(bookId);  // To update the list of books in the UI
     }
 
@@ -173,21 +240,22 @@ public class BooksViewModel extends AndroidViewModel {
     }
 
     /*
-        deleteBookInServer : proc :
-            Delete a book from the server
+        deleteBookFromServer : proc :
+            Delete a book from the server based on the book ID (using the API)
         Parameter(s) :
             bookId : int : The id of the book to delete
         Return :
             void
     */
-    public void deleteBookInServer(int bookId) {
+    public void deleteBookFromServer(int bookId) {
         StringRequest stringRequest = new StringRequest(
-                Request.Method.DELETE, "http://192.168.1.9:3000/books/"+bookId,
+                Request.Method.DELETE, "http://"+ this.adr_ip_pc_on_the_network +":3000/books/"+bookId,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(getApplication(), "Response is: " + response, Toast.LENGTH_SHORT).show();
                         Log.d("BooksViewModel", "Response is: " + response);
+                        // We must to verify (not doing here) the code status of the response to know if the book has been deleted or not
+                        Toast.makeText(getApplication(), "Book deleted !" + response, Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {

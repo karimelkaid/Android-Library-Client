@@ -13,10 +13,16 @@
         android:hint="@string/book_name" />
 
     <EditText
-        android:id="@+id/et_author"
+        android:id="@+id/et_publication_year"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/authors_name" />
+        android:hint="@string/publication_year" />
+
+    <EditText
+        android:id="@+id/et_author_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/author_id" />
 
     <Button
         android:id="@+id/btn_add_book"
