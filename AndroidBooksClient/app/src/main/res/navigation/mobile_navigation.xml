@@ -29,12 +29,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="AndroidBooksClient.androidbooksclient.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
-    <fragment
         android:id="@+id/navigation_notifications"
         android:name="AndroidBooksClient.androidbooksclient.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
@@ -49,6 +43,15 @@
             android:id="@+id/action_navigation_addBook_to_navigation_books"
             app:destination="@id/navigation_books" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_authors"
+        android:name="AndroidBooksClient.androidbooksclient.View.AuthorsFragment"
+        android:label="@string/authors"
+        tools:layout="@layout/fragment_authors">
+        
+    </fragment>
+
 
     
 

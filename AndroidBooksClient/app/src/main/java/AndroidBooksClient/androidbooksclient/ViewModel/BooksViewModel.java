@@ -32,7 +32,7 @@ public class BooksViewModel extends AndroidViewModel {
     private final MutableLiveData<List<Book>> booksLiveData;
     //private static int nextId = 1;
     RequestQueue queue;
-    private String adr_ip_pc_on_the_network = "192.168.140.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.27.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
 
     public BooksViewModel(@NonNull Application application) {
         super(application);

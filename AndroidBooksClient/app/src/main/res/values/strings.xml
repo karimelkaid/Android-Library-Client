@@ -17,4 +17,10 @@
     <string name="delete">Delete</string>
     <string name="publication_year">"Publication year : "</string>
     <string name="author_id">"Author ID : "</string>
+    <string name="one_author">One author</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="books">Books</string>
+    <string name="title_authors">Authors</string>
+    <string name="authors">Authors</string>
 </resources>

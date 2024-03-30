@@ -150,7 +150,7 @@ public class BookInformation extends Fragment {
         tv_id = view.findViewById(R.id.tv_bood_id);
         tv_title = view.findViewById(R.id.tv_book_title);
         tv_publication_year = view.findViewById(R.id.tv_publication_year);
-        tv_author_id = view.findViewById(R.id.tv_author_id);
+        tv_author_id = view.findViewById(R.id.tv_author_of_book_id);
 
         btn_delete_book = view.findViewById(R.id.btn_delete_book);
     }
