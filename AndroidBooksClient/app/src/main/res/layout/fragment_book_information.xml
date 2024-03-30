@@ -5,7 +5,7 @@
     android:id="@+id/cl_book_information"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BookInformation">
+    tools:context=".View.BookInformation">
 
     <TextView
         android:id="@+id/tv_bood_id"

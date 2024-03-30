@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient;
+package AndroidBooksClient.androidbooksclient.View;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import AndroidBooksClient.androidbooksclient.ViewModel.BooksViewModel;
+import AndroidBooksClient.androidbooksclient.R;
 
 /**
  * A simple {@link Fragment} subclass.

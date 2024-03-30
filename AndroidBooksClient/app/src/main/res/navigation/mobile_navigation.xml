@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_books"
-        android:name="AndroidBooksClient.androidbooksclient.BooksFragment"
+        android:name="AndroidBooksClient.androidbooksclient.View.BooksFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_books">
         <action
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/navigation_bookInformation"
-        android:name="AndroidBooksClient.androidbooksclient.BookInformation"
+        android:name="AndroidBooksClient.androidbooksclient.View.BookInformation"
         android:label="@string/title_book_information"
         tools:layout="@layout/fragment_book_information" >
         <action
@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/navigation_addBook"
-        android:name="AndroidBooksClient.androidbooksclient.AddBookFragment"
+        android:name="AndroidBooksClient.androidbooksclient.View.AddBookFragment"
         android:label="@string/add_book"
         tools:layout="@layout/fragment_add_book" >
         <action

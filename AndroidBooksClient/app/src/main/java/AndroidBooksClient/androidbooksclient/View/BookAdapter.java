@@ -1,34 +1,19 @@
-package AndroidBooksClient.androidbooksclient;
+package AndroidBooksClient.androidbooksclient.View;
 
-import static java.security.AccessController.getContext;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import AndroidBooksClient.androidbooksclient.Book;
+import AndroidBooksClient.androidbooksclient.Model.Book;
+import AndroidBooksClient.androidbooksclient.R;
 
 public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
 

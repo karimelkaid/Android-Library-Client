@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient;
+package AndroidBooksClient.androidbooksclient.ViewModel;
 
 import android.app.Application;
 import android.content.Context;
@@ -21,8 +21,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import AndroidBooksClient.androidbooksclient.Model.Book;
 
 public class BooksViewModel extends AndroidViewModel {
     private final MutableLiveData<List<Book>> booksLiveData;

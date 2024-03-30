@@ -1,9 +1,7 @@
-package AndroidBooksClient.androidbooksclient;
+package AndroidBooksClient.androidbooksclient.Model;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import AndroidBooksClient.androidbooksclient.Book;
 
 public class Author {
     private int id;

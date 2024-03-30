@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient;
+package AndroidBooksClient.androidbooksclient.View;
 
 import android.os.Bundle;
 
@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import AndroidBooksClient.androidbooksclient.ViewModel.BooksViewModel;
+import AndroidBooksClient.androidbooksclient.R;
 
 /**
  * A simple {@link Fragment} subclass.

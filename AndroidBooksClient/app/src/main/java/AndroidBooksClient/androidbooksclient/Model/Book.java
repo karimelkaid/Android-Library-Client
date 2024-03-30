@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient;
+package AndroidBooksClient.androidbooksclient.Model;
 
 public class Book {
     private int id;
