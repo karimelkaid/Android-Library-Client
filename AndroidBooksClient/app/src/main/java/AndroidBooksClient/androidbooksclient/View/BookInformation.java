@@ -184,7 +184,7 @@ public class BookInformation extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        booksViewModel.deleteBookLocally(bookId);
+                        booksViewModel.deleteBook(bookId);
                         navigateTo(R.id.action_navigation_bookInformation_to_navigation_books);
                     }
                 }

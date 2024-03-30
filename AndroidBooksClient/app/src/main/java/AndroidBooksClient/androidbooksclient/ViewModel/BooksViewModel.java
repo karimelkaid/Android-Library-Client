@@ -14,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -29,10 +30,12 @@ import AndroidBooksClient.androidbooksclient.Model.Book;
 public class BooksViewModel extends AndroidViewModel {
     private final MutableLiveData<List<Book>> booksLiveData;
     //private static int nextId = 1;
+    RequestQueue queue;
 
     public BooksViewModel(@NonNull Application application) {
         super(application);
         booksLiveData = new MutableLiveData<>(new ArrayList<>());
+        queue = Volley.newRequestQueue(getApplication());
         loadData(getApplication());
     }
 
@@ -52,7 +55,6 @@ public class BooksViewModel extends AndroidViewModel {
     private void loadData(Context context) {
         String url = "http://192.168.1.9:3000/books";
 
-        RequestQueue queue = Volley.newRequestQueue(context);
         JsonArrayRequest request = new JsonArrayRequest(
                 Request.Method.GET,
                 url,
@@ -127,6 +129,19 @@ public class BooksViewModel extends AndroidViewModel {
     }
 
     /*
+        deleteBook : proc :
+            Delete a book in the server and locally (locally to update the UI)
+        Parameter(s) :
+            bookId : int : The id of the book to delete
+        Return :
+            void
+    */
+    public void deleteBook(int bookId){
+        deleteBookInServer(bookId);
+        deleteBookLocally(bookId);  // To update the list of books in the UI
+    }
+
+    /*
     deleteBookLocally : procedure :
         Removes a book from the list of books (local) based on the book ID
     Parameter(s) :
@@ -155,5 +170,34 @@ public class BooksViewModel extends AndroidViewModel {
 
         // Update the LiveData with the modified books list
         this.booksLiveData.setValue(books);
+    }
+
+    /*
+        deleteBookInServer : proc :
+            Delete a book from the server
+        Parameter(s) :
+            bookId : int : The id of the book to delete
+        Return :
+            void
+    */
+    public void deleteBookInServer(int bookId) {
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.DELETE, "http://192.168.1.9:3000/books/"+bookId,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(getApplication(), "Response is: " + response, Toast.LENGTH_SHORT).show();
+                        Log.d("BooksViewModel", "Response is: " + response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplication(), "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                        Log.d("BooksViewModel", "Error: " + error.toString());
+                    }
+                }
+        );
+        queue.add(stringRequest);
     }
 }
