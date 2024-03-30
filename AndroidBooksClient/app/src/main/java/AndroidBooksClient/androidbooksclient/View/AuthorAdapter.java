@@ -1,5 +1,6 @@
 package AndroidBooksClient.androidbooksclient.View;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import AndroidBooksClient.androidbooksclient.Model.Author;
+import AndroidBooksClient.androidbooksclient.R;
 
 public class AuthorAdapter extends RecyclerView.Adapter<AuthorViewHolder> {
     List<Author> authors;
@@ -23,7 +25,8 @@ public class AuthorAdapter extends RecyclerView.Adapter<AuthorViewHolder> {
     @NonNull
     @Override
     public AuthorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_author_view_holder, parent, false);
+        return new AuthorViewHolder(view);
     }
 
     @Override
