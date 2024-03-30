@@ -9,11 +9,11 @@ public class Author {
     private String last_name;
     private List<Book> books;
 
-    public Author(int id, String fist_name, String last_name) {
+    public Author(int id, String fist_name, String last_name, List<Book> books_of_author) {
         this.id = id;
         this.fist_name = fist_name;
         this.last_name = last_name;
-        this.books = new ArrayList<>();
+        this.books = new ArrayList<>(books_of_author);
     }
 
     // Getters and Setters

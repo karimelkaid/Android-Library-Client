@@ -88,7 +88,7 @@ public class BooksFragment extends Fragment{
             bookAdapter = new BookAdapter(books);
 
             // Set the books in the adapter
-            bookAdapter.setBooks(books);
+            //bookAdapter.setBooks(books);
 
             // Set the adapter to the RecyclerView
             recyclerView.setAdapter(bookAdapter);

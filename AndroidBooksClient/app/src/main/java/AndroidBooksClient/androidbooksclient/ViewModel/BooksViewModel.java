@@ -61,7 +61,7 @@ public class BooksViewModel extends AndroidViewModel {
                 Request.Method.GET,
                 url,
                 null,
-                new Response.Listener<JSONArray>() { // Utiliser JSONArray ici
+                new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         handleResponseLoadData(context, response);

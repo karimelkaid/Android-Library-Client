@@ -3,12 +3,15 @@ package AndroidBooksClient.androidbooksclient.View;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import AndroidBooksClient.androidbooksclient.R;
+import AndroidBooksClient.androidbooksclient.ViewModel.AuthorsViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +28,8 @@ public class AuthorsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private AuthorAdapter authorAdapter;
 
     public AuthorsFragment() {
         // Required empty public constructor
@@ -61,6 +66,20 @@ public class AuthorsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_authors, container, false);
+        View view = inflater.inflate(R.layout.fragment_authors, container, false);
+
+        // Retrieving the AuthorsViewModel
+        AuthorsViewModel authorsViewModel = new ViewModelProvider(requireActivity()).get(AuthorsViewModel.class);
+
+        // Retrieving the RecyclerView
+        RecyclerView recyclerView = view.findViewById(R.id.rv_authors);
+
+        // Setting the adapter when the authorsLiveData changes
+        authorsViewModel.get_authors_live_data().observe(getViewLifecycleOwner(), authors -> {
+            authorAdapter = new AuthorAdapter(authors);
+            recyclerView.setAdapter(authorAdapter);
+        });
+
+        return view;
     }
 }

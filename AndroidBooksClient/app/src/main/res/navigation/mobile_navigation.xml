@@ -49,7 +49,6 @@
         android:name="AndroidBooksClient.androidbooksclient.View.AuthorsFragment"
         android:label="@string/authors"
         tools:layout="@layout/fragment_authors">
-        
     </fragment>
 
 
