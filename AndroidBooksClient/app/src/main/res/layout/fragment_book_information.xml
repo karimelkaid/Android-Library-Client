@@ -28,12 +28,12 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_bood_id" />
 
     <TextView
-        android:id="@+id/tv_author_name"
+        android:id="@+id/tv_publication_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginTop="32dp"
-        android:text="@string/authors_name"
+        android:text="@string/publication_year"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_book_title" />
 
@@ -57,5 +57,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_author_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/author_id"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_publication_year" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

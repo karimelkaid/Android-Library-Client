@@ -15,4 +15,6 @@
     <string name="title_book_information">title_book_information</string>
     <string name="add_book">Add a book</string>
     <string name="delete">Delete</string>
+    <string name="publication_year">"Publication year : "</string>
+    <string name="author_id">"Author ID : "</string>
 </resources>

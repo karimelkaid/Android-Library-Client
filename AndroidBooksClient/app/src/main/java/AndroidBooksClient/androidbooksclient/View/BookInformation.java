@@ -36,13 +36,15 @@ public class BookInformation extends Fragment {
 
     Button btn_back;
     Button btn_delete_book;
-    TextView tv_book_id;
-    TextView tv_book_title;
-    TextView tv_book_author;
+    TextView tv_id;
+    TextView tv_title;
+    TextView tv_publication_year;
+    TextView tv_author_id;
 
-    private int bookId;
-    private String bookTitle;
-    private String author;
+    private int book_id;
+    private String book_title;
+    private int publication_year;
+    private int author_id;
 
     BooksViewModel booksViewModel;
 
@@ -87,21 +89,9 @@ public class BookInformation extends Fragment {
 
         findComponents(view);
         getBookInformations();
-        btn_back.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
-                        navController.navigate(R.id.action_navigation_bookInformation_to_navigation_books);
-                    }
-                }
-        );
+        setUpBackButton(btn_back);
 
-        setUpDeleteBookButton(this.bookId);
-
-
-
-
+        setUpDeleteBookButton(this.book_id);
         // Updating text views with the book information
         updateBookInformation();
 
@@ -109,12 +99,40 @@ public class BookInformation extends Fragment {
         return view;
     }
 
+    /*
+        setUpBackButton : proc :
+            Sets up the back button to navigate to the Books fragment
+        Parameter(s) :
+            btnBack : Button : The button to set up
+        Return :
+            void
+    */
+    public void setUpBackButton(Button btnBack) {
+        btn_back.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        navigateTo(R.id.action_navigation_bookInformation_to_navigation_books);
+                    }
+                }
+        );
+    }
+
+    /*
+        getBookInformations : proc :
+            Retrieves the book informations from the shared preferences
+        Parameter(s) :
+            None
+        Return :
+            void
+    */
     public void getBookInformations() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("BookInfo", Context.MODE_PRIVATE);
 
-        this.bookId = sharedPreferences.getInt("id", -1);
-        this.bookTitle = sharedPreferences.getString("title", "");
-        this.author = sharedPreferences.getString("author", "");
+        this.book_id = sharedPreferences.getInt("id", -1);
+        this.book_title = sharedPreferences.getString("title", "");
+        this.publication_year = sharedPreferences.getInt("publication_year", -1);
+        this.author_id = sharedPreferences.getInt("author_id", -1);
     }
 
     /*
@@ -129,9 +147,11 @@ public class BookInformation extends Fragment {
         // Retrieving the layout components for this fragment
         btn_back = view.findViewById(R.id.btn_back_book_information);
 
-        tv_book_id = view.findViewById(R.id.tv_bood_id);
-        tv_book_title = view.findViewById(R.id.tv_book_title);
-        tv_book_author = view.findViewById(R.id.tv_author_name);
+        tv_id = view.findViewById(R.id.tv_bood_id);
+        tv_title = view.findViewById(R.id.tv_book_title);
+        tv_publication_year = view.findViewById(R.id.tv_publication_year);
+        tv_author_id = view.findViewById(R.id.tv_author_id);
+
         btn_delete_book = view.findViewById(R.id.btn_delete_book);
     }
 
@@ -145,11 +165,20 @@ public class BookInformation extends Fragment {
     */
     public void updateBookInformation() {
 
-        tv_book_id.setText( "ID : " + this.bookId );
-        tv_book_title.setText("Title : "+ this.bookTitle);
-        tv_book_author.setText( "Author\'s name : " + this.author );
+        tv_id.setText( "ID : " + this.book_id );
+        tv_title.setText("Title : "+ this.book_title);
+        tv_publication_year.setText( "Publication year : " + this.publication_year );
+        tv_author_id.setText( "Author ID : " + this.author_id );
     }
 
+    /*
+        setUpDeleteBookButton : proc :
+            Sets up the delete book button to delete the book
+        Parameter(s) :
+            bookId : int : The id of the book to delete
+        Return :
+            void
+    */
     public void setUpDeleteBookButton(int bookId){
         btn_delete_book.setOnClickListener(
                 new View.OnClickListener() {
