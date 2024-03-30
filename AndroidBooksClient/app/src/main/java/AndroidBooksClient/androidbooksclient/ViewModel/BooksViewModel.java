@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import AndroidBooksClient.androidbooksclient.Model.Book;
@@ -126,15 +127,15 @@ public class BooksViewModel extends AndroidViewModel {
     }
 
     /*
-    deleteBook : procedure :
-        Removes a book from the list of books based on the given book ID.
+    deleteBookLocally : procedure :
+        Removes a book from the list of books (local) based on the book ID
     Parameter(s) :
         bookId : int : The ID of the book to remove.
     Return :
         void
-*/
-    public void deleteBook(int bookId){
-        /*
+    */
+    public void deleteBookLocally(int bookId){
+
         // Fetch the current list of books
         List<Book> books = this.getBooks().getValue();
 
@@ -153,6 +154,6 @@ public class BooksViewModel extends AndroidViewModel {
         }
 
         // Update the LiveData with the modified books list
-        this.booksLiveData.setValue(books);*/
+        this.booksLiveData.setValue(books);
     }
 }
