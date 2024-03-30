@@ -4,14 +4,14 @@ public class Book {
     private int id;
 
     private String title;
-    private String author;
-    private String description;
+    private int publication_year;
+    private int authorId;
 
-    public Book(int id, String title, String author, String description) {
+    public Book(int id, String title, int publication_year, int authorId) {
         this.id = id;
         this.title = title;
-        this.author = author;
-        this.description = description;
+        this.publication_year = publication_year;
+        this.authorId = authorId;
     }
 
     // Getters and Setters
@@ -19,31 +19,31 @@ public class Book {
         return id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public int getPublication_year() {
+        return publication_year;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPublication_year(int publication_year) {
+        this.publication_year = publication_year;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 }

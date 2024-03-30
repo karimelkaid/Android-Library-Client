@@ -85,7 +85,7 @@ public class BooksFragment extends Fragment{
 
         // ViewModel
         booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
-        bookAdapter = new BookAdapter(booksViewModel.getBooks().getValue());
+        //bookAdapter = new BookAdapter(booksViewModel.getBooks().getValue());
         booksViewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
             // Instanciate the adapter with the list of books when the list is updated (because request is asynchronous)
             bookAdapter = new BookAdapter(books);

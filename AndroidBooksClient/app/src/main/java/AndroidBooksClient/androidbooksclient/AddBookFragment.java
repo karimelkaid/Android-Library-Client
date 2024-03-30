@@ -76,7 +76,7 @@ public class AddBookFragment extends Fragment {
         booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
 
         findComponents(view);
-        _btn_add_book.setOnClickListener(
+        /*_btn_add_book.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -94,7 +94,7 @@ public class AddBookFragment extends Fragment {
                         navigateTo(R.id.action_navigation_addBook_to_navigation_books);
                     }
                 }
-        );
+        );*/
 
         return view;
     }

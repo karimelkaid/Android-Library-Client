@@ -17,24 +17,27 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class BooksViewModel extends AndroidViewModel {
-    private final MutableLiveData<JSONArray> booksLiveData;
-    private static int nextId = 1;
+    private final MutableLiveData<List<Book>> booksLiveData;
+    //private static int nextId = 1;
 
     public BooksViewModel(@NonNull Application application) {
         super(application);
-        booksLiveData = new MutableLiveData<>();
+        booksLiveData = new MutableLiveData<>(new ArrayList<>());
         loadData(getApplication());
     }
 
 
-    public static int getNextId() {
+    /*public static int getNextId() {
         return nextId;
-    }
+    }*/
 
     /*
         loadData : proc :
@@ -55,9 +58,7 @@ public class BooksViewModel extends AndroidViewModel {
                 new Response.Listener<JSONArray>() { // Utiliser JSONArray ici
                     @Override
                     public void onResponse(JSONArray response) {
-                        Toast.makeText(context, "Response: " + response.toString(), Toast.LENGTH_SHORT).show();
-                        Log.d("BooksViewModel", "Response: " + response.toString());
-                        booksLiveData.setValue(response);
+                        handleResponse(context, response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -73,6 +74,31 @@ public class BooksViewModel extends AndroidViewModel {
     }
 
     /*
+        handleResponse : proc :
+            Handle the response from the server
+        Parameter(s) :
+            context : Context : The context of the application
+            response : JSONArray : The response from the server
+        Return :
+            void
+    */
+    public void handleResponse(Context context, JSONArray response){
+        Toast.makeText(context, "Response: " + response.toString(), Toast.LENGTH_SHORT).show();
+        Log.d("BooksViewModel", "Response: " + response.toString());
+        //booksLiveData.setValue(response);
+        for( int i=0; i<response.length(); i++ ){
+            try {
+                JSONObject bookJsonObject = response.getJSONObject(i);
+                // Create a new book object from the JSON object and add it to the list of books
+                Book newBook = new Book(bookJsonObject.getInt("id"), bookJsonObject.getString("title"), bookJsonObject.getInt("publication_year"), bookJsonObject.getInt("authorId"));
+                addBook(newBook);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /*
         getBooks : func :
             Get the list of books
         Parameter(s) :
@@ -80,7 +106,7 @@ public class BooksViewModel extends AndroidViewModel {
         Return :
             MutableLiveData<List<Book>> : The list of books
     */
-    public MutableLiveData<JSONArray> getBooks() {
+    public MutableLiveData<List<Book>> getBooks() {
         return booksLiveData;
     }
 
@@ -93,10 +119,9 @@ public class BooksViewModel extends AndroidViewModel {
             void
     */
     public void addBook(Book newBook) {
-        /*List<Book> books = booksLiveData.getValue();
+        List<Book> books = booksLiveData.getValue();
         books.add(newBook);
         booksLiveData.setValue(books);
-        nextId++;*/
     }
 
     /*

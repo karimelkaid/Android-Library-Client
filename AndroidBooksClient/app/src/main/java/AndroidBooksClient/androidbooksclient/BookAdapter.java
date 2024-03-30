@@ -32,9 +32,9 @@ import AndroidBooksClient.androidbooksclient.Book;
 
 public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
 
-    JSONArray books;
+    List<Book> books;
 
-    public BookAdapter(JSONArray books) {
+    public BookAdapter(List<Book> books) {
         this.books = books;
     }
 
@@ -47,19 +47,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
-        try
-        {
-            JSONObject booksJSONObject = books.getJSONObject(position);
-            String pokemonDetails = booksJSONObject.getString("title");
-            holder.getBookTitle().setText(pokemonDetails);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+        String bookTitle = books.get(position).getTitle();
+        holder.getBookTitle().setText(bookTitle);
     }
     @Override
     public int getItemCount() {
-        return books.length();
+        return books.size();
     }
 
 
@@ -84,7 +77,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
         Return :
             void
     */
-    public void saveBookInformations(Context context, Book book){
+    /*public void saveBookInformations(Context context, Book book){
         // Retrieve the shared preferences
         SharedPreferences sharedPreferences = context.getSharedPreferences("BookInfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -95,7 +88,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
         editor.putString("author", book.getAuthor());
 
         editor.apply();
-    }
+    }*/
 
     /*
         navigateToBookInformation : proc :
@@ -110,7 +103,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
         navController.navigate(R.id.action_navigation_books_to_navigation_bookInformation);
     }
 
-    public void setBooks(JSONArray books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
     }
 }
