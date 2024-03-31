@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ public class AuthorInformationFragment extends Fragment {
     private TextView tv_author_id;
     private TextView tv_author_first_name;
     private TextView tv_author_last_name;
+    private RecyclerView rv_books_of_author;
 
 
     public AuthorInformationFragment() {
@@ -75,6 +78,7 @@ public class AuthorInformationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_author_information, container, false);
 
         findComponents(view);
+        rv_books_of_author.setLayoutManager(new LinearLayoutManager(getActivity()));
         SharedViewModel sharedViewModel = new ViewModelProvider(getActivity()).get(SharedViewModel.class);
 
         // Observing the selected author to display his information
@@ -82,6 +86,10 @@ public class AuthorInformationFragment extends Fragment {
             this.tv_author_id.setText("ID : " + author.getId());
             this.tv_author_first_name.setText("First Name : " + author.getFirst_name());
             this.tv_author_last_name.setText("Last Name : " + author.getLast_name());
+
+            // Display the books of the author
+            BookOfAuthorAdapter bookOfAuthorAdapter = new BookOfAuthorAdapter(author.getBooks());
+            rv_books_of_author.setAdapter(bookOfAuthorAdapter);
         });
 
         return view;
@@ -98,8 +106,8 @@ public class AuthorInformationFragment extends Fragment {
     private void findComponents(View view) {
         // Retrieving the layout components for this fragment
         tv_author_id = view.findViewById(R.id.tv_author_id);
-
         tv_author_first_name = view.findViewById(R.id.tv_author_first_name);
         tv_author_last_name = view.findViewById(R.id.tv_author_last_name);
+        rv_books_of_author = view.findViewById(R.id.rv_books_of_author);
     }
 }
