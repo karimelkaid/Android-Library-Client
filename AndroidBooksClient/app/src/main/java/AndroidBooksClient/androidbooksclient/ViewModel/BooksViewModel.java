@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.volley.Request;
@@ -32,15 +33,20 @@ public class BooksViewModel extends AndroidViewModel {
     private final MutableLiveData<List<Book>> booksLiveData;
     //private static int nextId = 1;
     RequestQueue queue;
-    private static final String adr_ip_pc_on_the_network = "192.168.1.9";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.241.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private boolean api_loaded;
+    private MutableLiveData<Book> bookUpdated;
+    private boolean updateOrNot;
 
     public BooksViewModel(@NonNull Application application) {
         super(application);
         booksLiveData = new MutableLiveData<>(new ArrayList<>());
+        bookUpdated = new MutableLiveData<>();
+        api_loaded = false;
+        updateOrNot = false;
         queue = Volley.newRequestQueue(getApplication());
         loadData(getApplication());
     }
-
 
     /*public static int getNextId() {
         return nextId;
@@ -65,6 +71,7 @@ public class BooksViewModel extends AndroidViewModel {
                     @Override
                     public void onResponse(JSONArray response) {
                         handleResponseLoadData(context, response);
+                        api_loaded = true;
                     }
                 },
                 new Response.ErrorListener() {
@@ -158,6 +165,17 @@ public class BooksViewModel extends AndroidViewModel {
                             throw new RuntimeException(e);
                         }
                         addBookToList(newBook);
+
+                        if(api_loaded){
+                            /*if( newBook.getPublication_year() == -1 ){
+                                bookUpdated.setValue(new Book(newBook.getId(), newBook.getTitle(), newBook.getAuthorId()));
+                            }
+                            else{
+                                bookUpdated.setValue(new Book(newBook.getId(), newBook.getTitle(), newBook.getPublication_year(), newBook.getAuthorId()));
+                            }*/
+                            bookUpdated.setValue(newBook);
+                        }
+
                         Toast.makeText(getApplication(), "Book added !", Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
@@ -267,5 +285,21 @@ public class BooksViewModel extends AndroidViewModel {
                 }
         );
         queue.add(stringRequest);
+    }
+
+    public MutableLiveData<Book> getBookUpdated() {
+        return bookUpdated;
+    }
+
+    public void setBookAdded(Object object) {
+        bookUpdated.setValue(null);
+    }
+
+    public boolean getUpdateOrNot() {
+        return this.updateOrNot;
+    }
+
+    public void setUpdateOrNot(boolean b) {
+        this.updateOrNot = b;
     }
 }

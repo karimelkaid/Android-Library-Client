@@ -3,6 +3,7 @@ package AndroidBooksClient.androidbooksclient.View;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -12,11 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import AndroidBooksClient.androidbooksclient.Model.Book;
+import AndroidBooksClient.androidbooksclient.ViewModel.AuthorsViewModel;
 import AndroidBooksClient.androidbooksclient.ViewModel.BooksViewModel;
 import AndroidBooksClient.androidbooksclient.R;
 
@@ -42,6 +45,9 @@ public class AddBookFragment extends Fragment {
     private EditText _et_book_author_id;
 
     private BooksViewModel booksViewModel;
+    private AuthorsViewModel authorsViewModel;
+    private Observer<Book> bookUpdateObserver;
+    private int authorId;
 
     public AddBookFragment() {
         // Required empty public constructor
@@ -82,12 +88,28 @@ public class AddBookFragment extends Fragment {
 
         // Getting the ViewModel
         booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
+        authorsViewModel = new ViewModelProvider(requireActivity()).get(AuthorsViewModel.class);
 
         findComponents(view);
         setUpAddBookButton();
 
+        bookUpdateObserver = book -> {
+            if (book != null) {
+                authorsViewModel.updateAuthorsLiveData(authorId, book);
+
+                booksViewModel.getBookUpdated().removeObserver(this.bookUpdateObserver);
+                booksViewModel.setBookAdded(null);
+                navigateTo(R.id.action_navigation_addBook_to_navigation_books);
+            }
+        };
+
+        booksViewModel.getBookUpdated().observe(getViewLifecycleOwner(), bookUpdateObserver);
+
+
         return view;
     }
+
+
 
     /*
         setUpAddBookButton : proc :
@@ -112,7 +134,7 @@ public class AddBookFragment extends Fragment {
                         else{
                             publicationYear = -1;
                         }
-                        int authorId = Integer.parseInt(_et_book_author_id.getText().toString());
+                        authorId = Integer.parseInt(_et_book_author_id.getText().toString());
 
                         // Creating a JSON object to send to the server
                         JSONObject book_json_object = new JSONObject();
@@ -125,12 +147,11 @@ public class AddBookFragment extends Fragment {
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
+                        //booksViewModel.setUpdateOrNot(true);
 
                         // Adding the book to the server and locally
                         booksViewModel.addBook(authorId, book_json_object);
 
-                        // Back to the previous fragment
-                        navigateTo(R.id.action_navigation_addBook_to_navigation_books);
                     }
                 }
         );

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.ViewModel.AuthorsViewModel;
 import AndroidBooksClient.androidbooksclient.ViewModel.SharedViewModel;
@@ -80,16 +81,19 @@ public class AuthorInformationFragment extends Fragment {
         findComponents(view);
         rv_books_of_author.setLayoutManager(new LinearLayoutManager(getActivity()));
         SharedViewModel sharedViewModel = new ViewModelProvider(getActivity()).get(SharedViewModel.class);
+        AuthorsViewModel authorsViewModel = new ViewModelProvider(getActivity()).get(AuthorsViewModel.class);
 
         // Observing the selected author to display his information
         sharedViewModel.getSelectedAuthor().observe(getViewLifecycleOwner(), author -> {
+
+            Author author_to_display = authorsViewModel.getAuthor(author.getId());
             this.tv_author_id.setText("ID : " + author.getId());
             this.tv_author_first_name.setText("First Name : " + author.getFirst_name());
             this.tv_author_last_name.setText("Last Name : " + author.getLast_name());
 
             // Display the books of the author
-            BookOfAuthorAdapter bookOfAuthorAdapter = new BookOfAuthorAdapter(author.getBooks());
-            rv_books_of_author.setAdapter(bookOfAuthorAdapter);
+                BookOfAuthorAdapter bookOfAuthorAdapter = new BookOfAuthorAdapter(author_to_display.getBooks());
+                rv_books_of_author.setAdapter(bookOfAuthorAdapter);
         });
 
         return view;

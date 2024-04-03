@@ -30,11 +30,13 @@ import AndroidBooksClient.androidbooksclient.Model.Book;
 public class AuthorsViewModel extends AndroidViewModel {
     MutableLiveData<List<Author>> authorsLiveData;
     RequestQueue queue;
-    private static final String adr_ip_pc_on_the_network = "192.168.1.9";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.241.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private MutableLiveData<Author> authorEdited;
 
     public AuthorsViewModel(@NonNull Application application) {
         super(application);
         this.authorsLiveData = new MutableLiveData<>(new ArrayList<>());
+        this.authorEdited = new MutableLiveData<>();
         queue = Volley.newRequestQueue(getApplication());
         load_authors_from_api(application);
     }
@@ -157,5 +159,39 @@ public class AuthorsViewModel extends AndroidViewModel {
 
     public MutableLiveData<List<Author>> get_authors_live_data() {
         return authorsLiveData;
+    }
+
+    public void updateAuthorsLiveData(int authorId, Book book) {
+        List<Author> authors = authorsLiveData.getValue();
+        for( Author author : authors ){
+            if( author.getId() == authorId ){
+                author.addBook(book);
+            }
+        }
+        authorsLiveData.setValue(authors);
+    }
+
+    public void setAuthorEdited(int authorId) {
+        List<Author> authors = authorsLiveData.getValue();
+        for( Author author : authors ){
+            if( author.getId() == authorId ){
+                authorEdited.setValue(author);
+            }
+        }
+        authorsLiveData.setValue(authors);
+    }
+
+    public MutableLiveData<Author> getAuthorEdited() {
+        return authorEdited;
+    }
+
+    public Author getAuthor(int id) {
+        List<Author> authors = authorsLiveData.getValue();
+        for( Author author : authors ){
+            if( author.getId() == id ){
+                return author;
+            }
+        }
+        return null;
     }
 }
