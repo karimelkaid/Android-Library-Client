@@ -49,4 +49,12 @@ public class Author {
     public void addBook(Book book) {
         books.add(book);
     }
+
+    public void removeBookById(int id) {
+        for( Book book : books ){
+            if( book.getId() == id ){
+                books.remove(book);
+            }
+        }
+    }
 }

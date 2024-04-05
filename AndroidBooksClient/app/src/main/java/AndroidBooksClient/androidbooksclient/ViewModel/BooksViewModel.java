@@ -33,7 +33,7 @@ public class BooksViewModel extends AndroidViewModel {
     private final MutableLiveData<List<Book>> booksLiveData;
     //private static int nextId = 1;
     RequestQueue queue;
-    private static final String adr_ip_pc_on_the_network = "192.168.241.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.210.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
     private boolean api_loaded;
     private MutableLiveData<Book> bookUpdated;
     private boolean updateOrNot;
@@ -248,6 +248,7 @@ public class BooksViewModel extends AndroidViewModel {
 
                 if( current_book.getId() == bookId){
                     iterator.remove();  // Since the book to delete has been found and removed, break out of the loop
+                    this.bookUpdated.setValue(current_book);
                     break;
                 }
             }

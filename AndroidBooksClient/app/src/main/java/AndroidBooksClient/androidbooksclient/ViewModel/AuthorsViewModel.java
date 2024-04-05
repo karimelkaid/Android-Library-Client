@@ -30,7 +30,7 @@ import AndroidBooksClient.androidbooksclient.Model.Book;
 public class AuthorsViewModel extends AndroidViewModel {
     MutableLiveData<List<Author>> authorsLiveData;
     RequestQueue queue;
-    private static final String adr_ip_pc_on_the_network = "192.168.241.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.210.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
     private MutableLiveData<Author> authorEdited;
 
     public AuthorsViewModel(@NonNull Application application) {
@@ -193,5 +193,16 @@ public class AuthorsViewModel extends AndroidViewModel {
             }
         }
         return null;
+    }
+
+    public void deleteBookOfAuthor(Book book) {
+        List<Author> authors = authorsLiveData.getValue();
+        for( Author author : authors ){
+            if( author.getId() == book.getAuthorId() ){
+                // Remove the book from the list of books of the author
+                author.removeBookById(book.getId());
+            }
+        }
+        authorsLiveData.setValue(authors);
     }
 }

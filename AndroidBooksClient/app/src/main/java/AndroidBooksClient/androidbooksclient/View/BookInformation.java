@@ -15,8 +15,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import AndroidBooksClient.androidbooksclient.Model.Author;
+import AndroidBooksClient.androidbooksclient.ViewModel.AuthorsViewModel;
 import AndroidBooksClient.androidbooksclient.ViewModel.BooksViewModel;
 import AndroidBooksClient.androidbooksclient.R;
+import AndroidBooksClient.androidbooksclient.ViewModel.SharedViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,6 +50,8 @@ public class BookInformation extends Fragment {
     private int author_id;
 
     BooksViewModel booksViewModel;
+    AuthorsViewModel authorsViewModel;
+    SharedViewModel sharedViewModel;
 
     public BookInformation() {
         // Required empty public constructor
@@ -86,6 +91,8 @@ public class BookInformation extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book_information, container, false);
 
         booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        authorsViewModel = new ViewModelProvider(requireActivity()).get(AuthorsViewModel.class);
 
         findComponents(view);
         getBookInformations();
@@ -185,6 +192,15 @@ public class BookInformation extends Fragment {
                     @Override
                     public void onClick(View v) {
                         booksViewModel.deleteBook(bookId);
+                        booksViewModel.getBookUpdated().observe(getViewLifecycleOwner(), book -> {
+                            if(book != null){
+                                authorsViewModel.deleteBookOfAuthor(book);
+
+                                Author author = authorsViewModel.getAuthor(book.getAuthorId());
+                                sharedViewModel.setSelectedAuthor(author);
+                            }
+
+                        });
                         navigateTo(R.id.action_navigation_bookInformation_to_navigation_books);
                     }
                 }
