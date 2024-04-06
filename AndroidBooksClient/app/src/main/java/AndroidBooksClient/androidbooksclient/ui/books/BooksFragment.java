@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient.View;
+package AndroidBooksClient.androidbooksclient.ui.books;
 
 import android.os.Bundle;
 
@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import AndroidBooksClient.androidbooksclient.ViewModel.BooksViewModel;
 import AndroidBooksClient.androidbooksclient.R;
 
 /**

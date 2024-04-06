@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient.View;
+package AndroidBooksClient.androidbooksclient.ui.author_informations;
 
 import android.view.View;
 import android.widget.TextView;
@@ -18,4 +18,5 @@ public class BookOfAuthorViewHolder extends RecyclerView.ViewHolder {
     public TextView get_tv_book_of_author_title(){
         return tv_book_of_author_title;
     }
+
 }

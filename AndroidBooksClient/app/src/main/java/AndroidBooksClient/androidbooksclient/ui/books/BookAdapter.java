@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient.View;
+package AndroidBooksClient.androidbooksclient.ui.books;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient.View;
+package AndroidBooksClient.androidbooksclient.ui.authors;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,17 +6,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.R;
+import AndroidBooksClient.androidbooksclient.SharedViewModel;
 import AndroidBooksClient.androidbooksclient.Utils;
-import AndroidBooksClient.androidbooksclient.ViewModel.AuthorsViewModel;
-import AndroidBooksClient.androidbooksclient.ViewModel.SharedViewModel;
 
 public class AuthorAdapter extends RecyclerView.Adapter<AuthorViewHolder> {
     List<Author> authors;

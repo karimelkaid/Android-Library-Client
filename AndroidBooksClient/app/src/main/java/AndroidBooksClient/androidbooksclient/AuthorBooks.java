@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient.ViewModel;
+package AndroidBooksClient.androidbooksclient;
 
 import android.app.Application;
 

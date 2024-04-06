@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient.View;
+package AndroidBooksClient.androidbooksclient.ui.add_book;
 
 import android.os.Bundle;
 
@@ -13,15 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import AndroidBooksClient.androidbooksclient.Model.Book;
-import AndroidBooksClient.androidbooksclient.ViewModel.AuthorsViewModel;
-import AndroidBooksClient.androidbooksclient.ViewModel.BooksViewModel;
 import AndroidBooksClient.androidbooksclient.R;
+import AndroidBooksClient.androidbooksclient.ui.authors.AuthorsViewModel;
+import AndroidBooksClient.androidbooksclient.ui.books.BooksViewModel;
 
 /**
  * A simple {@link Fragment} subclass.

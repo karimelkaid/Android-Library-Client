@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_books"
-        android:name="AndroidBooksClient.androidbooksclient.View.BooksFragment"
+        android:name="AndroidBooksClient.androidbooksclient.ui.books.BooksFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_books">
         <action
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/navigation_bookInformation"
-        android:name="AndroidBooksClient.androidbooksclient.View.BookInformation"
+        android:name="AndroidBooksClient.androidbooksclient.ui.book_informations.BookInformation"
         android:label="@string/title_book_information"
         tools:layout="@layout/fragment_book_information" >
         <action
@@ -36,7 +36,7 @@
 
     <fragment
         android:id="@+id/navigation_addBook"
-        android:name="AndroidBooksClient.androidbooksclient.View.AddBookFragment"
+        android:name="AndroidBooksClient.androidbooksclient.ui.add_book.AddBookFragment"
         android:label="@string/add_book"
         tools:layout="@layout/fragment_add_book" >
         <action
@@ -46,7 +46,7 @@
 
     <fragment
         android:id="@+id/navigation_authors"
-        android:name="AndroidBooksClient.androidbooksclient.View.AuthorsFragment"
+        android:name="AndroidBooksClient.androidbooksclient.ui.authors.AuthorsFragment"
         android:label="@string/authors"
         tools:layout="@layout/fragment_authors">
         <action
@@ -56,13 +56,17 @@
 
     <fragment
         android:id="@+id/navigation_author_informations"
-        android:name="AndroidBooksClient.androidbooksclient.View.AuthorInformationFragment"
+        android:name="AndroidBooksClient.androidbooksclient.ui.author_informations.AuthorInformationFragment"
         android:label="@string/author_informations"
         tools:layout="@layout/fragment_author_information">
         <action
             android:id="@+id/action_navigation_author_informations_to_navigation_authors"
             app:destination="@id/navigation_authors" />
+        <action
+            android:id="@+id/action_navigation_author_informations_to_navigation_bookInformation"
+            app:destination="@id/navigation_bookInformation" />
     </fragment>
+    
 
 
     

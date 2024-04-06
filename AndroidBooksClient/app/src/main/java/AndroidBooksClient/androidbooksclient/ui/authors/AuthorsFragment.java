@@ -1,11 +1,10 @@
-package AndroidBooksClient.androidbooksclient.View;
+package AndroidBooksClient.androidbooksclient.ui.authors;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -13,8 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import AndroidBooksClient.androidbooksclient.R;
-import AndroidBooksClient.androidbooksclient.ViewModel.AuthorsViewModel;
-import AndroidBooksClient.androidbooksclient.ViewModel.SharedViewModel;
+import AndroidBooksClient.androidbooksclient.SharedViewModel;
 
 /**
  * A simple {@link Fragment} subclass.

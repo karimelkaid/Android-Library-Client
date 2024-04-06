@@ -1,4 +1,4 @@
-package AndroidBooksClient.androidbooksclient.View;
+package AndroidBooksClient.androidbooksclient.ui.book_informations;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,10 +16,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import AndroidBooksClient.androidbooksclient.Model.Author;
-import AndroidBooksClient.androidbooksclient.ViewModel.AuthorsViewModel;
-import AndroidBooksClient.androidbooksclient.ViewModel.BooksViewModel;
 import AndroidBooksClient.androidbooksclient.R;
-import AndroidBooksClient.androidbooksclient.ViewModel.SharedViewModel;
+import AndroidBooksClient.androidbooksclient.SharedViewModel;
+import AndroidBooksClient.androidbooksclient.ui.authors.AuthorsViewModel;
+import AndroidBooksClient.androidbooksclient.ui.books.BooksViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -135,6 +135,8 @@ public class BookInformation extends Fragment {
     */
     public void getBookInformations() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("BookInfo", Context.MODE_PRIVATE);
+        //Integer idSelectedBook = sharedViewModel.getSelectedBook().getValue();
+
 
         this.book_id = sharedPreferences.getInt("id", -1);
         this.book_title = sharedPreferences.getString("title", "");

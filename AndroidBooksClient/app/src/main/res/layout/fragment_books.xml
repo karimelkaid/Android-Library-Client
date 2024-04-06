@@ -5,7 +5,7 @@
     android:id="@+id/cl_books"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".View.BooksFragment">
+    tools:context=".ui.books.BooksFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_books"
