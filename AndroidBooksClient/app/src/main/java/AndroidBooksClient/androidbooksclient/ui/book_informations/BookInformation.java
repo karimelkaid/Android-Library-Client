@@ -52,6 +52,7 @@ public class BookInformation extends Fragment {
     BooksViewModel booksViewModel;
     AuthorsViewModel authorsViewModel;
     SharedViewModel sharedViewModel;
+    BookInformationsViewModel bookInformationsViewModel;
 
     public BookInformation() {
         // Required empty public constructor
@@ -98,7 +99,7 @@ public class BookInformation extends Fragment {
 
         setUpDeleteBookButton(sharedViewModel.getSelectedBookId().getValue());
         // Updating text views with the book information
-        BookInformationsViewModel bookInformationsViewModel = new ViewModelProvider(requireActivity()).get(BookInformationsViewModel.class);
+        bookInformationsViewModel = new ViewModelProvider(requireActivity()).get(BookInformationsViewModel.class);
         //int bookId = sharedViewModel.getSelectedBookId().getValue();
         bookInformationsViewModel.setBookMutableLiveData(sharedViewModel.getSelectedBook().getValue());
         //bookInformationsViewModel.loadBook(bookId);
@@ -113,6 +114,7 @@ public class BookInformation extends Fragment {
             }
             this.tv_author_id.setText("Author ID : "+book.getAuthorId());
         });
+
         //updateBookInformation();
 
 
@@ -205,7 +207,7 @@ public class BookInformation extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        booksViewModel.deleteBook(bookId);
+                        /*booksViewModel.deleteBook(bookId);
                         booksViewModel.getBookUpdated().observe(getViewLifecycleOwner(), book -> {
                             if(book != null){
                                 authorsViewModel.deleteBookOfAuthor(book);
@@ -214,7 +216,8 @@ public class BookInformation extends Fragment {
                                 sharedViewModel.setSelectedAuthor(author.getId());
                             }
 
-                        });
+                        });*/
+                        bookInformationsViewModel.deleteBook(sharedViewModel.getBookDeletedIdMutableLiveData());    // 
                         navigateTo(R.id.action_navigation_bookInformation_to_navigation_books);
                     }
                 }

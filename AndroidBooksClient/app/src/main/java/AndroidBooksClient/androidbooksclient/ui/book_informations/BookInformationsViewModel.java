@@ -25,7 +25,9 @@ public class BookInformationsViewModel extends AndroidViewModel {
         this.bookMutableLiveData.setValue(book);
     }
 
-    public void loadBook(int bookId){
-        repository.getBook(bookId, bookMutableLiveData);
+    public void deleteBook(MutableLiveData<Integer> bookDeletedIdMutableLiveData){
+        if( this.bookMutableLiveData.getValue() != null ){
+            repository.deleteBook(bookMutableLiveData, bookDeletedIdMutableLiveData);
+        }
     }
 }

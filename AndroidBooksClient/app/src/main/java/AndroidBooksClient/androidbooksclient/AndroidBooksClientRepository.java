@@ -12,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -201,5 +202,30 @@ Return :
         // Add the request to the RequestQueue
         queue.add(jsonObjectRequest);
 
+    }
+
+    public void deleteBook(MutableLiveData<Book> bookMutableLiveData, MutableLiveData<Integer> bookDeletedIdMutableLiveData) {
+        Book bookToDelete = bookMutableLiveData.getValue();
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.DELETE, "http://"+ this.adr_ip_pc_on_the_network +":3000/books/"+bookToDelete.getId(),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Repository", "Response is: " + response);
+                        bookDeletedIdMutableLiveData.setValue(bookToDelete.getId());
+                        //bookMutableLiveData.setValue(null); // To warn observers that I need to delete the book locally as well
+
+                        //Toast.makeText(application, "Book deleted !" + response, Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(application, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                        Log.d("Repository", "Error: " + error.toString());
+                    }
+                }
+        );
+        queue.add(stringRequest);
     }
 }

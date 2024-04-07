@@ -102,7 +102,16 @@ public class BooksFragment extends Fragment implements OnItemClickListener {
         sharedViewModel.getBookToAddMutableLiveData().observe(getViewLifecycleOwner(), newBook -> {
             if( newBook != null ){
                 booksViewModel.addBookToList(newBook);
+                sharedViewModel.setBookToAddMutable(null);  // To prevent the code from re-triggering after returning to this fragment without having added a book
                 Toast.makeText(getContext(), "Book added !", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        sharedViewModel.getBookDeletedIdMutableLiveData().observe(getViewLifecycleOwner(), bookDeletedId -> {
+            if( bookDeletedId != -1 ){
+                booksViewModel.deleteBookLocally(bookDeletedId);
+                sharedViewModel.setBookDeletedIdMutable(-1);
+                Toast.makeText(getContext(), "Book deleted !", Toast.LENGTH_SHORT).show();
             }
         });
 
