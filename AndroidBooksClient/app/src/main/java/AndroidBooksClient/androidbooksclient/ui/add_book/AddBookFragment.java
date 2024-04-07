@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +20,6 @@ import org.json.JSONObject;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.SharedViewModel;
-import AndroidBooksClient.androidbooksclient.ui.authors.AuthorsViewModel;
-import AndroidBooksClient.androidbooksclient.ui.books.BooksViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,13 +103,13 @@ public class AddBookFragment extends Fragment {
 
         booksViewModel.getBookUpdated().observe(getViewLifecycleOwner(), bookUpdateObserver);*/
 
+        // To Edit the list of books in BooksViewModel
         addBookViewModel.getBookToAddMutableLiveData().observe(getViewLifecycleOwner(), bookAdded -> {
             // Given that there are several fragments observing the same object, after adding an object, if you come to this fragment this code will be launched to add a new book similar to the previous one
             // To solve this problem, check that you really want to add a book
             if( addBookViewModel.getThereIsBookToAdd() ){
-                // To Edit the list of books in BooksViewModel
-                Toast.makeText(getContext(), "book to add changed", Toast.LENGTH_SHORT).show();
-                sharedViewModel.setSelectedBook(bookAdded);
+                //Toast.makeText(getContext(), "book to add changed", Toast.LENGTH_SHORT).show();
+                sharedViewModel.setBookToAddMutable(bookAdded);
                 addBookViewModel.setThereIsBookToAdd(false);
                 navigateTo(R.id.action_navigation_addBook_to_navigation_books);
             }

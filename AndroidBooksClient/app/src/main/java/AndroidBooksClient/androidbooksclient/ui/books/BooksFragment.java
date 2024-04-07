@@ -99,7 +99,7 @@ public class BooksFragment extends Fragment implements OnItemClickListener {
             recyclerView.setAdapter(bookAdapter);
         });
 
-        sharedViewModel.getSelectedBook().observe(getViewLifecycleOwner(), newBook -> {
+        sharedViewModel.getBookToAddMutableLiveData().observe(getViewLifecycleOwner(), newBook -> {
             if( newBook != null ){
                 booksViewModel.addBookToList(newBook);
                 Toast.makeText(getContext(), "Book added !", Toast.LENGTH_SHORT).show();
