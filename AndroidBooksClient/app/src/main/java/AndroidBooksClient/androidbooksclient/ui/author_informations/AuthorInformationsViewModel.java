@@ -10,11 +10,12 @@ import AndroidBooksClient.androidbooksclient.Model.Author;
 
 public class AuthorInformationsViewModel extends AndroidViewModel {
     private AndroidBooksClientRepository repository;
-    private MutableLiveData<Author> authorLiveData = new MutableLiveData<>();
+    private MutableLiveData<Author> authorLiveData;
 
     public AuthorInformationsViewModel(@NonNull Application application) {
         super(application);
         repository = new AndroidBooksClientRepository(application);
+        authorLiveData = new MutableLiveData<>();
     }
 
     public LiveData<Author> getAuthorLiveData() {

@@ -1,6 +1,7 @@
 package AndroidBooksClient.androidbooksclient;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
@@ -25,7 +26,7 @@ import AndroidBooksClient.androidbooksclient.Model.Book;
 
 public class AndroidBooksClientRepository {
     RequestQueue queue;
-    private static final String adr_ip_pc_on_the_network = "192.168.210.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.208.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
     String urlApi = "http://"+ this.adr_ip_pc_on_the_network +":3000";
 
     private Application application;
@@ -49,8 +50,12 @@ public class AndroidBooksClientRepository {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(application, "Response: " + response.toString(), Toast.LENGTH_SHORT).show();
-                        createAuthorFromJSONObject(response);
+                        //Toast.makeText(application, "Response: " + response.toString(), Toast.LENGTH_SHORT).show();
+                        try {
+                            createAuthorFromJSONObject(response, authorLiveData);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
 
                     }
                 },
@@ -65,8 +70,8 @@ public class AndroidBooksClientRepository {
         queue.add(request);
     }
 
-    private void createAuthorFromJSONObject(JSONObject response) throws JSONException {
-        String url = urlApi + "/authors/"+response.getInt("id")+"/books";
+    private void createAuthorFromJSONObject(JSONObject authorJSONObject, MutableLiveData<Author> authorLiveData) throws JSONException {
+        String url = urlApi + "/authors/"+authorJSONObject.getInt("id")+"/books";
 
         JsonArrayRequest request = new JsonArrayRequest(
                 Request.Method.GET,
@@ -88,8 +93,10 @@ public class AndroidBooksClientRepository {
                         }
                         // Create a new author object from the JSON object and add it to the list of authors
                         try {
-                            Author author = new Author(authorJsonObject.getInt("id"), authorJsonObject.getString("firstname"), authorJsonObject.getString("lastname"), books_of_author);
-                            addAuthorToList(author);
+                            Author author = new Author(authorJSONObject.getInt("id"), authorJSONObject.getString("firstname"), authorJSONObject.getString("lastname"), books_of_author);
+                            authorLiveData.setValue(author);
+                            //Toast.makeText(application, "Author ("+author.getId()+") loaded from the API !", Toast.LENGTH_SHORT).show();
+
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -103,6 +110,8 @@ public class AndroidBooksClientRepository {
                     }
                 }
         );
+
+        queue.add(request);
     }
 
     /*
@@ -127,4 +136,70 @@ Return :
         return newBook;
     }
 
+    public void getBook(int bookId, MutableLiveData<Book> bookMutableLiveData) {
+        String url = urlApi + "/books/" + bookId;
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject bookJSONObject) {
+                        //Toast.makeText(application, "Response: " + response.toString(), Toast.LENGTH_SHORT).show();
+                        try {
+                            Book book = translateJsonObjectToABookObject(bookJSONObject);
+                            bookMutableLiveData.setValue(book);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(application, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        queue.add(request);
+    }
+
+    public void addBook(int authorId, JSONObject bookToAddJSONObject, MutableLiveData<Book> bookToAddMutableLiveData) throws JSONException {
+        String url = "http://"+ this.adr_ip_pc_on_the_network +":3000/authors/"+ authorId +"/books";
+
+        // Create a new JsonObjectRequest
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, bookToAddJSONObject, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("BooksViewModel", "Response: " + response.toString());
+                        // Add the book to the local list and update the LiveData
+                        Book newBook = null;
+                        try {
+                            newBook = translateJsonObjectToABookObject(response);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        //addBookToList(newBook);
+                        //bookUpdated.setValue(newBook);
+                        bookToAddMutableLiveData.setValue(newBook);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        Toast.makeText(application, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                        Log.e("BooksViewModel", "Error: " + error.toString());
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        queue.add(jsonObjectRequest);
+
+    }
 }

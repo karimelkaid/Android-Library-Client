@@ -49,7 +49,7 @@ public class AuthorAdapter extends RecyclerView.Adapter<AuthorViewHolder> {
                         // Display the author's information
                         //Toast.makeText(v.getContext(), "to configure", Toast.LENGTH_SHORT).show();
                         //Utils.saveAuthorInformations(v.getContext(), "Author"+author.getId()+"Datas", author);
-                        sharedViewModel.setSelectedAuthor(author);
+                        sharedViewModel.setSelectedAuthor(author.getId());
                         Utils.navigateTo(v.getContext(), R.id.action_navigation_authors_to_navigation_author_informations);
                     }
                 }

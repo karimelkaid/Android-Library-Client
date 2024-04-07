@@ -30,7 +30,7 @@ import AndroidBooksClient.androidbooksclient.Model.Book;
 public class AuthorsViewModel extends AndroidViewModel {
     MutableLiveData<List<Author>> authorsLiveData;
     RequestQueue queue;
-    private static final String adr_ip_pc_on_the_network = "192.168.1.9";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.208.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
     private MutableLiveData<Author> authorEdited;
 
     public AuthorsViewModel(@NonNull Application application) {

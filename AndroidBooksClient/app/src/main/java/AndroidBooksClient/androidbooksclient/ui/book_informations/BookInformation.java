@@ -90,17 +90,30 @@ public class BookInformation extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_book_information, container, false);
 
-        booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        authorsViewModel = new ViewModelProvider(requireActivity()).get(AuthorsViewModel.class);
 
         findComponents(view);
-        getBookInformations();
+        //getBookInformations();
         setUpBackButton();
 
-        setUpDeleteBookButton(this.book_id);
+        setUpDeleteBookButton(sharedViewModel.getSelectedBookId().getValue());
         // Updating text views with the book information
-        updateBookInformation();
+        BookInformationsViewModel bookInformationsViewModel = new ViewModelProvider(requireActivity()).get(BookInformationsViewModel.class);
+        //int bookId = sharedViewModel.getSelectedBookId().getValue();
+        bookInformationsViewModel.setBookMutableLiveData(sharedViewModel.getSelectedBook().getValue());
+        //bookInformationsViewModel.loadBook(bookId);
+        bookInformationsViewModel.getBookMutableLiveData().observe(getViewLifecycleOwner(), book -> {
+            this.tv_id.setText("ID : "+book.getId());
+            this.tv_title.setText("Title : "+book.getTitle());
+            if(book.getPublication_year() != -1){
+                this.tv_publication_year.setText("Publication year : "+book.getPublication_year());
+            }
+            else{
+                this.tv_publication_year.setText("No specified publication year");
+            }
+            this.tv_author_id.setText("Author ID : "+book.getAuthorId());
+        });
+        //updateBookInformation();
 
 
         return view;
@@ -173,7 +186,6 @@ public class BookInformation extends Fragment {
             void
     */
     public void updateBookInformation() {
-
         tv_id.setText( "ID : " + this.book_id );
         tv_title.setText("Title : "+ this.book_title);
         tv_publication_year.setText( "Publication year : " + this.publication_year );
@@ -199,7 +211,7 @@ public class BookInformation extends Fragment {
                                 authorsViewModel.deleteBookOfAuthor(book);
 
                                 Author author = authorsViewModel.getAuthor(book.getAuthorId());
-                                sharedViewModel.setSelectedAuthor(author);
+                                sharedViewModel.setSelectedAuthor(author.getId());
                             }
 
                         });

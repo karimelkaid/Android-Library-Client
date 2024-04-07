@@ -12,17 +12,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import AndroidBooksClient.androidbooksclient.Model.Book;
+import AndroidBooksClient.androidbooksclient.OnItemClickListener;
 import AndroidBooksClient.androidbooksclient.R;
+import AndroidBooksClient.androidbooksclient.SharedViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link BooksFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BooksFragment extends Fragment{
+public class BooksFragment extends Fragment implements OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +40,7 @@ public class BooksFragment extends Fragment{
     private RecyclerView recyclerView;
     private BookAdapter bookAdapter;
     private BooksViewModel booksViewModel;
+    private SharedViewModel sharedViewModel;
     private FloatingActionButton fab;
 
 
@@ -81,16 +86,24 @@ public class BooksFragment extends Fragment{
 
         // ViewModel
         booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         //bookAdapter = new BookAdapter(booksViewModel.getBooks().getValue());
         booksViewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
+            //onItemClicked(0);
             // Instanciate the adapter with the list of books when the list is updated (because request is asynchronous)
-            bookAdapter = new BookAdapter(books);
-
+            bookAdapter = new BookAdapter(books, this, sharedViewModel);
             // Set the books in the adapter
             //bookAdapter.setBooks(books);
 
             // Set the adapter to the RecyclerView
             recyclerView.setAdapter(bookAdapter);
+        });
+
+        sharedViewModel.getSelectedBook().observe(getViewLifecycleOwner(), newBook -> {
+            if( newBook != null ){
+                booksViewModel.addBookToList(newBook);
+                Toast.makeText(getContext(), "Book added !", Toast.LENGTH_SHORT).show();
+            }
         });
 
         findComponents(view);
@@ -146,4 +159,17 @@ public class BooksFragment extends Fragment{
         navController.navigate(actionId);
     }
 
+    @Override
+    public void onItemClicked(int position) {
+        //Toast.makeText(getContext(), "Book clicked : "+sharedViewModel.getSelectedBook().getValue(), Toast.LENGTH_SHORT).show();
+        int bookSelectedId = sharedViewModel.getSelectedBookId().getValue();
+        Book book_selected = bookAdapter.getBook(bookSelectedId);
+        if( book_selected != null){
+            sharedViewModel.setSelectedBook(book_selected);
+            navigateTo(R.id.action_navigation_books_to_navigation_bookInformation);
+        }
+        else{
+            Toast.makeText(getContext(), "Book not found", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

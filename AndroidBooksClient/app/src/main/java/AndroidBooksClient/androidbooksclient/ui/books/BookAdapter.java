@@ -16,14 +16,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import AndroidBooksClient.androidbooksclient.Model.Book;
+import AndroidBooksClient.androidbooksclient.OnItemClickListener;
 import AndroidBooksClient.androidbooksclient.R;
+import AndroidBooksClient.androidbooksclient.SharedViewModel;
 
 public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
 
     List<Book> books;
+    private OnItemClickListener listener;
+    SharedViewModel sharedViewModel;
 
-    public BookAdapter(List<Book> books) {
+    public BookAdapter(List<Book> books, OnItemClickListener listener, SharedViewModel sharedViewModel) {
         this.books = books;
+        this.listener = listener;
+        this.sharedViewModel = sharedViewModel;
     }
 
     @NonNull
@@ -38,7 +44,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
         String bookTitle = books.get(position).getTitle();
         Button btn_book = holder.getBookTitle();
         btn_book.setText(bookTitle);
-        setUpBookInformationsButton(btn_book, books.get(position));
+        btn_book.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedViewModel.setSelectedBookId(books.get(position).getId());
+                listener.onItemClicked(position);
+            }
+        });
+        //setUpBookInformationsButton(btn_book, books.get(position));
     }
     @Override
     public int getItemCount() {
@@ -58,7 +71,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
         btn_book.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveBookInformations(v.getContext(), book);
+                //saveBookInformations(v.getContext(), book);
+                sharedViewModel.setSelectedBookId(book.getId());
                 navigateTo(R.id.action_navigation_books_to_navigation_bookInformation, v);   // Fragment change to BookInformation
             }
         });
@@ -104,5 +118,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
 
     public void setBooks(List<Book> books) {
         this.books = books;
+    }
+
+    public Book getBook(int bookSelectedId) {
+        for (Book book : books) {
+            if (book.getId() == bookSelectedId) {
+                return book;
+            }
+        }
+        return null;
     }
 }

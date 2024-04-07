@@ -13,12 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import AndroidBooksClient.androidbooksclient.Model.Book;
 import AndroidBooksClient.androidbooksclient.R;
+import AndroidBooksClient.androidbooksclient.SharedViewModel;
 import AndroidBooksClient.androidbooksclient.ui.authors.AuthorsViewModel;
 import AndroidBooksClient.androidbooksclient.ui.books.BooksViewModel;
 
@@ -43,8 +45,8 @@ public class AddBookFragment extends Fragment {
     private EditText _et_book_publication_year;
     private EditText _et_book_author_id;
 
-    private BooksViewModel booksViewModel;
-    private AuthorsViewModel authorsViewModel;
+    private SharedViewModel sharedViewModel;
+    private AddBookViewModel addBookViewModel;
     private Observer<Book> bookUpdateObserver;
     private int authorId;
 
@@ -86,13 +88,13 @@ public class AddBookFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_book, container, false);
 
         // Getting the ViewModel
-        booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
-        authorsViewModel = new ViewModelProvider(requireActivity()).get(AuthorsViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        addBookViewModel = new ViewModelProvider(requireActivity()).get(AddBookViewModel.class);
 
         findComponents(view);
         setUpAddBookButton();
 
-        bookUpdateObserver = book -> {
+        /*bookUpdateObserver = book -> {
             if (book != null) {
                 authorsViewModel.updateAuthorsLiveData(authorId, book);
 
@@ -102,7 +104,19 @@ public class AddBookFragment extends Fragment {
             }
         };
 
-        booksViewModel.getBookUpdated().observe(getViewLifecycleOwner(), bookUpdateObserver);
+        booksViewModel.getBookUpdated().observe(getViewLifecycleOwner(), bookUpdateObserver);*/
+
+        addBookViewModel.getBookToAddMutableLiveData().observe(getViewLifecycleOwner(), bookAdded -> {
+            // Given that there are several fragments observing the same object, after adding an object, if you come to this fragment this code will be launched to add a new book similar to the previous one
+            // To solve this problem, check that you really want to add a book
+            if( addBookViewModel.getThereIsBookToAdd() ){
+                // To Edit the list of books in BooksViewModel
+                Toast.makeText(getContext(), "book to add changed", Toast.LENGTH_SHORT).show();
+                sharedViewModel.setSelectedBook(bookAdded);
+                addBookViewModel.setThereIsBookToAdd(false);
+                navigateTo(R.id.action_navigation_addBook_to_navigation_books);
+            }
+        });
 
 
         return view;
@@ -123,6 +137,7 @@ public class AddBookFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        addBookViewModel.setThereIsBookToAdd(true);
                         // Retrieving information from the EditTexts
                         String title = _et_book_title.getText().toString();
                         int publicationYear;
@@ -149,7 +164,13 @@ public class AddBookFragment extends Fragment {
                         //booksViewModel.setUpdateOrNot(true);
 
                         // Adding the book to the server and locally
-                        booksViewModel.addBook(authorId, book_json_object);
+                       // booksViewModel.addBook(authorId, book_json_object);
+
+                        try {
+                            addBookViewModel.addBook(authorId, book_json_object);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
 
                     }
                 }

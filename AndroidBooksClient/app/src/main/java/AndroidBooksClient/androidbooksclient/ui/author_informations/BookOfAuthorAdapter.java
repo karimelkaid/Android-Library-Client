@@ -42,7 +42,7 @@ public class BookOfAuthorAdapter extends RecyclerView.Adapter<BookOfAuthorViewHo
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        sharedViewModel.setSelectedBook(current_book.getId());
+                        sharedViewModel.setSelectedBookId(current_book.getId());
                         navigateTo(R.id.action_navigation_author_informations_to_navigation_bookInformation, v);
                     }
                 }

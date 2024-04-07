@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.SharedViewModel;
@@ -28,12 +30,17 @@ public class AuthorInformationFragment extends Fragment {
         findComponents(view);
         rvBooksOfAuthor.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        viewModel = new ViewModelProvider(this).get(AuthorInformationsViewModel.class);
-        int authorId = 3;
+        viewModel = new ViewModelProvider(requireActivity()).get(AuthorInformationsViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        //int authorId = 3;
+        int authorId = sharedViewModel.getSelectedAuthor().getValue();
+
+        //Toast.makeText(getContext(), "Author ID: " + authorId, Toast.LENGTH_SHORT).show();
         viewModel.loadAuthorToDisplay(authorId);
 
         viewModel.getAuthorLiveData().observe(getViewLifecycleOwner(), author -> {
             if (author != null) {
+                Toast.makeText(getContext(), "author "+author.getId()+" selected change", Toast.LENGTH_SHORT).show();
                 tvAuthorId.setText("ID: " + author.getId());
                 tvAuthorFirstName.setText("First Name: " + author.getFirst_name());
                 tvAuthorLastName.setText("Last Name: " + author.getLast_name());
