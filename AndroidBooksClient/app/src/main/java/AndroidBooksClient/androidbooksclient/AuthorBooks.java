@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-import AndroidBooksClient.androidbooksclient.AndroidBooksClientRepository;
+import AndroidBooksClient.androidbooksclient.Repository.AndroidBooksClientRepository;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 
 public class AuthorBooks extends AndroidViewModel {

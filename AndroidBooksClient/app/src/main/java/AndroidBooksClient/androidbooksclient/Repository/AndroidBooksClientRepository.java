@@ -1,6 +1,7 @@
-package AndroidBooksClient.androidbooksclient;
+package AndroidBooksClient.androidbooksclient.Repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,13 +28,67 @@ import AndroidBooksClient.androidbooksclient.Model.Book;
 
 public class AndroidBooksClientRepository {
     RequestQueue queue;
-    private static final String adr_ip_pc_on_the_network = "192.168.137.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    Application application;
+    private static final String adr_ip_pc_on_the_network = "192.168.161.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
     String urlApi = "http://"+ this.adr_ip_pc_on_the_network +":3000";
 
-    private Application application;
     public AndroidBooksClientRepository(Application application) {
         this.application = application;
         queue = Volley.newRequestQueue(application);
+    }
+
+    public void loadAllBooks(MutableLiveData<List<Book>> booksLiveData){
+        String url = urlApi+"/books";
+
+        JsonArrayRequest request = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        handleResponseLoadData(application, response, booksLiveData);
+                        //api_loaded = true;
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(application, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                        Log.e("BooksViewModel", "Error: " + error.toString());
+                    }
+                }
+        );
+
+        queue.add(request);
+    }
+
+    /*
+    handleResponseLoadData : proc :
+        Handle the response from the server
+    Parameter(s) :
+        context : Context : The context of the application
+        response : JSONArray : The response from the server
+    Return :
+        void
+*/
+    public void handleResponseLoadData(Context context, JSONArray response, MutableLiveData<List<Book>> booksLiveData){
+        Log.d("BooksViewModel", "Response: " + response.toString());
+        List<Book> books = booksLiveData.getValue();
+        for( int i=0; i<response.length(); i++ ){
+            try {
+                JSONObject bookJsonObject = response.getJSONObject(i);
+                // Create a new book object from the JSON object and add it to the list of books
+                Book newBook = translateJsonObjectToABookObject(bookJsonObject);
+                books.add(newBook);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        // When all the books have been added, I setValue in the livedata of the book list to
+        // notify the observers that the books have been added in order to update the UI.
+        booksLiveData.setValue(books);
+        //Toast.makeText(context, "Books loaded from the API !", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -72,7 +127,10 @@ public class AndroidBooksClientRepository {
     }
 
     private void createAuthorFromJSONObject(JSONObject authorJSONObject, MutableLiveData<Author> authorLiveData) throws JSONException {
-        String url = urlApi + "/authors/"+authorJSONObject.getInt("id")+"/books";
+
+        Author author = new Author(authorJSONObject.getInt("id"), authorJSONObject.getString("firstname"), authorJSONObject.getString("lastname"), null);
+        authorLiveData.setValue(author);
+        /*String url = urlApi + "/authors/"+authorJSONObject.getInt("id")+"/books";
 
         JsonArrayRequest request = new JsonArrayRequest(
                 Request.Method.GET,
@@ -93,14 +151,9 @@ public class AndroidBooksClientRepository {
                             }
                         }
                         // Create a new author object from the JSON object and add it to the list of authors
-                        try {
-                            Author author = new Author(authorJSONObject.getInt("id"), authorJSONObject.getString("firstname"), authorJSONObject.getString("lastname"), books_of_author);
-                            authorLiveData.setValue(author);
-                            //Toast.makeText(application, "Author ("+author.getId()+") loaded from the API !", Toast.LENGTH_SHORT).show();
-
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
+                        //Author author = new Author(authorJSONObject.getInt("id"), authorJSONObject.getString("firstname"), authorJSONObject.getString("lastname"), books_of_author);
+                        //authorLiveData.setValue(author);
+                        //Toast.makeText(application, "Author ("+author.getId()+") loaded from the API !", Toast.LENGTH_SHORT).show();
 
                     }
                 },
@@ -112,7 +165,7 @@ public class AndroidBooksClientRepository {
                 }
         );
 
-        queue.add(request);
+        queue.add(request);*/
     }
 
     /*

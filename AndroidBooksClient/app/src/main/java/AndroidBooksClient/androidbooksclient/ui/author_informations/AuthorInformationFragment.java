@@ -22,6 +22,7 @@ public class AuthorInformationFragment extends Fragment {
     private TextView tvAuthorLastName;
     private RecyclerView rvBooksOfAuthor;
     private AuthorInformationsViewModel viewModel;
+    private AuthorBooksViewModel authorBooksViewModel;
     private SharedViewModel sharedViewModel;
 
     @Override
@@ -32,8 +33,10 @@ public class AuthorInformationFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(AuthorInformationsViewModel.class);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        authorBooksViewModel = new ViewModelProvider(requireActivity()).get(AuthorBooksViewModel.class);
         //int authorId = 3;
         int authorId = sharedViewModel.getSelectedAuthor().getValue();
+        authorBooksViewModel.loadBooksOfAuthor(authorId);
 
         //Toast.makeText(getContext(), "Author ID: " + authorId, Toast.LENGTH_SHORT).show();
         viewModel.loadAuthorToDisplay(authorId);
@@ -44,8 +47,20 @@ public class AuthorInformationFragment extends Fragment {
                 tvAuthorId.setText("ID: " + author.getId());
                 tvAuthorFirstName.setText("First Name: " + author.getFirst_name());
                 tvAuthorLastName.setText("Last Name: " + author.getLast_name());
-                rvBooksOfAuthor.setAdapter(new BookOfAuthorAdapter(author.getBooks(), sharedViewModel));
+                //rvBooksOfAuthor.setAdapter(new BookOfAuthorAdapter(author.getBooks(), sharedViewModel));
             }
+        });
+
+        //To update the list of books by an author when a book is added (using the book's authorId)
+        /*sharedViewModel.getBookToAddMutableLiveData().observe(getViewLifecycleOwner(), bookAdded -> {
+            if( bookAdded !=null ){
+                if( !authorsViewModel.getAuthor(bookAdded.getAuthorId()).getBooks().contains(bookAdded) ){
+                    authorsViewModel.addBookToAuthor(bookAdded);
+                }
+            }
+        });*/
+        authorBooksViewModel.getBooksOfAuthorLiveData().observe(getViewLifecycleOwner(), books -> {
+            rvBooksOfAuthor.setAdapter(new BookOfAuthorAdapter(books, sharedViewModel));
         });
 
         return view;

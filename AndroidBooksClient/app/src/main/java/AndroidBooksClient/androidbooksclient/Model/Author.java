@@ -13,7 +13,7 @@ public class Author {
         this.id = id;
         this.fist_name = fist_name;
         this.last_name = last_name;
-        this.books = new ArrayList<>(books_of_author);
+        this.books = books_of_author;
     }
 
     // Getters and Setters

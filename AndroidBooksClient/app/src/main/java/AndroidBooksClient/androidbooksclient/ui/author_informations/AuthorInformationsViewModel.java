@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import AndroidBooksClient.androidbooksclient.AndroidBooksClientRepository;
+import AndroidBooksClient.androidbooksclient.Repository.AndroidBooksClientRepository;
 import AndroidBooksClient.androidbooksclient.Model.Author;
 
 public class AuthorInformationsViewModel extends AndroidViewModel {

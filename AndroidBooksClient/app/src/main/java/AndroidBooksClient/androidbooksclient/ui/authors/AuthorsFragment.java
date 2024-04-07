@@ -1,5 +1,7 @@
 package AndroidBooksClient.androidbooksclient.ui.authors;
 
+import static AndroidBooksClient.androidbooksclient.Utils.navigateTo;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.SharedViewModel;
@@ -32,6 +37,8 @@ public class AuthorsFragment extends Fragment {
 
     private AuthorAdapter authorAdapter;
     private SharedViewModel sharedViewModel;
+    private AuthorsViewModel authorsViewModel;
+    private FloatingActionButton fab;
 
     public AuthorsFragment() {
         // Required empty public constructor
@@ -70,8 +77,9 @@ public class AuthorsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_authors, container, false);
 
+        findComponents(view);
         // Retrieving the AuthorsViewModel
-        AuthorsViewModel authorsViewModel = new ViewModelProvider(requireActivity()).get(AuthorsViewModel.class);
+        authorsViewModel = new ViewModelProvider(requireActivity()).get(AuthorsViewModel.class);
 
         // Retrieving the RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.rv_authors);
@@ -80,12 +88,40 @@ public class AuthorsFragment extends Fragment {
         // Retrieving the SharedViewModel to give for the AuthorAdapter
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
+        setUpFab();
+
         // Setting the adapter when the authorsLiveData changes
         authorsViewModel.get_authors_live_data().observe(getViewLifecycleOwner(), authors -> {
             authorAdapter = new AuthorAdapter(authors, sharedViewModel);
             recyclerView.setAdapter(authorAdapter);
         });
 
+        //To update the list of books by an author when a book is added (using the book's authorId)
+        sharedViewModel.getBookToAddMutableLiveData().observe(getViewLifecycleOwner(), bookAdded -> {
+            if( bookAdded !=null ){
+                if( !authorsViewModel.getAuthor(bookAdded.getAuthorId()).getBooks().contains(bookAdded) ){
+                    authorsViewModel.addBookToAuthor(bookAdded);
+                }
+            }
+        });
+
         return view;
     }
+
+    private void findComponents(View view) {
+        this.fab = view.findViewById(R.id.fabAddAuthor);
+    }
+
+    public void setUpFab() {
+        fab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT).show();
+                        navigateTo(getActivity(), R.id.action_navigation_authors_to_navigation_add_author_fragment3);
+                    }
+                }
+        );
+    }
+
 }
