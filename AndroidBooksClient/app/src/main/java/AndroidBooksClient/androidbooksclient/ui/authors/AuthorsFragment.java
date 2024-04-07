@@ -105,6 +105,13 @@ public class AuthorsFragment extends Fragment {
             }
         });
 
+        // We check whether an author has been added in AddAuthorFragment to update the list of livedata authors.
+        sharedViewModel.getAuthorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
+            if (authorAdded != null) {
+                authorsViewModel.addAuthorToList(authorAdded);
+            }
+        });
+
         return view;
     }
 

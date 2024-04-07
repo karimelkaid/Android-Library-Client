@@ -26,4 +26,9 @@
     <string name="author_informations">Author\'s informations</string>
     <string name="book_of_author">Author\'s book</string>
     <string name="title_books_of_author">Books of author</string>
+    <string name="title_add_author">Add author</string>
+    <string name="firstname">FirstName</string>
+    <string name="lastname">Last name</string>
+    <string name="add_author">Add author</string>
+    <string name="tag_name">Tag\'s name</string>
 </resources>

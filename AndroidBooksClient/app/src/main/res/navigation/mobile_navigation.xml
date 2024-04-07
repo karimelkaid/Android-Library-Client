@@ -52,6 +52,10 @@
         <action
             android:id="@+id/action_navigation_authors_to_navigation_author_informations"
             app:destination="@id/navigation_author_informations" />
+        <action
+            android:id="@+id/action_navigation_authors_to_navigation_add_author_fragment3"
+            app:destination="@id/navigation_add_author_fragment" />
+
     </fragment>
 
     <fragment
@@ -65,6 +69,16 @@
         <action
             android:id="@+id/action_navigation_author_informations_to_navigation_bookInformation"
             app:destination="@id/navigation_bookInformation" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_author_fragment"
+        android:name="AndroidBooksClient.androidbooksclient.ui.addAuthor.AddAuthorFragment"
+        android:label="@string/title_add_author"
+        tools:layout="@layout/fragment_add_author">
+        <action
+            android:id="@+id/action_navigation_add_author_fragment_to_navigation_authors"
+            app:destination="@id/navigation_authors" />
     </fragment>
     
 

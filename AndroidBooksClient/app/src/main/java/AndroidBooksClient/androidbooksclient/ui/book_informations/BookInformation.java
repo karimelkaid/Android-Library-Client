@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.R;
@@ -53,6 +55,8 @@ public class BookInformation extends Fragment {
     AuthorsViewModel authorsViewModel;
     SharedViewModel sharedViewModel;
     BookInformationsViewModel bookInformationsViewModel;
+    BookTagsViewModel bookTagsViewModel;
+    RecyclerView rv_tags;
 
     public BookInformation() {
         // Required empty public constructor
@@ -102,6 +106,20 @@ public class BookInformation extends Fragment {
         bookInformationsViewModel = new ViewModelProvider(requireActivity()).get(BookInformationsViewModel.class);
         //int bookId = sharedViewModel.getSelectedBookId().getValue();
         bookInformationsViewModel.setBookMutableLiveData(sharedViewModel.getSelectedBook().getValue());
+        bookTagsViewModel = new ViewModelProvider(requireActivity()).get(BookTagsViewModel.class);
+
+        int bookId = sharedViewModel.getSelectedBookId().getValue();
+        bookTagsViewModel.loadTags(bookId);
+
+        bookTagsViewModel.getTagsMutableLiveData().observe(getViewLifecycleOwner(), tags -> {
+            if(tags != null){
+                //Toast.makeText(getContext(), "Tags loaded", Toast.LENGTH_SHORT).show();
+                TagAdapter tagAdapter = new TagAdapter(tags);
+                rv_tags.setAdapter(tagAdapter);
+            }
+        });
+
+
         //bookInformationsViewModel.loadBook(bookId);
         bookInformationsViewModel.getBookMutableLiveData().observe(getViewLifecycleOwner(), book -> {
             this.tv_id.setText("ID : "+book.getId());
@@ -177,6 +195,7 @@ public class BookInformation extends Fragment {
         tv_author_id = view.findViewById(R.id.tv_author_of_book_id);
 
         btn_delete_book = view.findViewById(R.id.btn_delete_book);
+        rv_tags = view.findViewById(R.id.rv_tags_of_book);
     }
 
     /*

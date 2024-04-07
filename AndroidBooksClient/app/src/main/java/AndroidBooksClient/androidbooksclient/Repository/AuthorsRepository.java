@@ -11,6 +11,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -26,7 +27,7 @@ import AndroidBooksClient.androidbooksclient.Model.Book;
 public class AuthorsRepository {
     RequestQueue queue;
     Application application;
-    private static final String adr_ip_pc_on_the_network = "192.168.161.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.1.9";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
     String urlApi = "http://"+ this.adr_ip_pc_on_the_network +":3000";
 
     public AuthorsRepository(Application application) {
@@ -235,5 +236,38 @@ Return :
         );
 
         queue.add(request);
+    }
+
+    public void addAuthor(JSONObject authorJSONObject, MutableLiveData<Author> authorAddedMutableLiveData) throws JSONException {
+        String url = urlApi+"/authors";
+
+        // Create a new JsonObjectRequest
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, authorJSONObject, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("AuthorsRepository", "Response: " + response.toString());
+                        // Add the book to the local list and update the LiveData
+                        Author author = null;
+                        try {
+                            author = new Author(response.getInt("id"), response.getString("firstname"), response.getString("lastname"), new ArrayList<>());
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        authorAddedMutableLiveData.setValue(author);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        Toast.makeText(application, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                        Log.e("AuthorsRepository", "Error: " + error.toString());
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        queue.add(jsonObjectRequest);
     }
 }

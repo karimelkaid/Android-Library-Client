@@ -25,11 +25,12 @@ import java.util.List;
 
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.Model.Book;
+import AndroidBooksClient.androidbooksclient.Model.Tag;
 
 public class AndroidBooksClientRepository {
     RequestQueue queue;
     Application application;
-    private static final String adr_ip_pc_on_the_network = "192.168.161.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.1.9";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
     String urlApi = "http://"+ this.adr_ip_pc_on_the_network +":3000";
 
     public AndroidBooksClientRepository(Application application) {
@@ -280,5 +281,40 @@ Return :
                 }
         );
         queue.add(stringRequest);
+    }
+
+    public void loadTags(int bookId, MutableLiveData<List<Tag>> tags) {
+        String url = urlApi + "/books/"+bookId+"/tags";
+
+        JsonArrayRequest request = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Toast.makeText(application, "Response: " + response.toString(), Toast.LENGTH_SHORT).show();
+                        List<Tag> tagsList = new ArrayList<>();
+                        for( int i=0; i<response.length(); i++ ){
+                            try {
+                                JSONObject tagJsonObject = response.getJSONObject(i);
+                                Tag tag = new Tag(tagJsonObject.getInt("id"), tagJsonObject.getString("name"));
+                                tagsList.add(tag);
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        tags.setValue(tagsList);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(application, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        queue.add(request);
     }
 }

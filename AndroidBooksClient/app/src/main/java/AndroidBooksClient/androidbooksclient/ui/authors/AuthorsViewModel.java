@@ -49,10 +49,23 @@ public class AuthorsViewModel extends AndroidViewModel {
     }
 
 
-    private void addAuthorToList(Author newAuthor) {
+    public void addAuthorToList(Author newAuthor) {
         List<Author> authors = this.authorsLiveData.getValue();
         authors.add(newAuthor);
+        sortByLastName(authors);
         authorsLiveData.setValue(authors);
+    }
+
+    private void sortByLastName(List<Author> authors) {
+        for( int i = 0; i < authors.size(); i++ ){
+            for( int j = i+1; j < authors.size(); j++ ){
+                if( authors.get(i).getLast_name().compareTo(authors.get(j).getLast_name()) > 0 ){
+                    Author aux = authors.get(i);
+                    authors.set(i, authors.get(j));
+                    authors.set(j, aux);
+                }
+            }
+        }
     }
 
 

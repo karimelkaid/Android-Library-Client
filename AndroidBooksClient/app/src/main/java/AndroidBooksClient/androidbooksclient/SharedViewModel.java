@@ -3,9 +3,11 @@ package AndroidBooksClient.androidbooksclient;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.dynamicanimation.animation.FloatValueHolder;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 
 public class SharedViewModel extends AndroidViewModel {
@@ -14,6 +16,7 @@ public class SharedViewModel extends AndroidViewModel {
     private MutableLiveData<Book> selectedBook;
     private MutableLiveData<Book> bookToAddMutableLiveData;
     private MutableLiveData<Integer> bookDeletedIdMutableLiveData;  // When I delete a book, I set its attribute to null, but I need its id to delete it from the other ViewModels too
+    private MutableLiveData<Author> authorAddedMutableLiveData;
 
     public SharedViewModel(@NonNull Application application) {
         super(application);
@@ -22,6 +25,7 @@ public class SharedViewModel extends AndroidViewModel {
         selectedBook = new MutableLiveData<>();
         bookToAddMutableLiveData = new MutableLiveData<>();
         bookDeletedIdMutableLiveData = new MutableLiveData<>();
+        authorAddedMutableLiveData = new MutableLiveData<>();
     }
 
     public MutableLiveData<Integer> getSelectedAuthor() {
@@ -65,5 +69,12 @@ public class SharedViewModel extends AndroidViewModel {
 
     public void setBookDeletedIdMutable( int deletedId ) {
         bookDeletedIdMutableLiveData.setValue(deletedId);
+    }
+
+    public void setAuthorAddedMutableLiveData(Author authorAdded) {
+        this.authorAddedMutableLiveData.setValue(authorAdded);
+    }
+    public MutableLiveData<Author> getAuthorAddedMutableLiveData() {
+        return this.authorAddedMutableLiveData;
     }
 }
