@@ -21,15 +21,12 @@ import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.SharedViewModel;
 
 public class AddAuthorFragment extends Fragment {
+    AddAuthorViewModel _addAuthorViewModel;
+    SharedViewModel _sharedViewModel;
 
-
-    TextView tv_firstname;
-    TextView tv_lastname;
-    Button btn_add_author;
-    AddAuthorViewModel addAuthorViewModel;
-    SharedViewModel sharedViewModel;
-    private boolean loading = false;    // To prevent unintentional execution of api actions
-
+    TextView _tvFirstname;
+    TextView _tvLastname;
+    Button _btnAddAuthor;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,39 +34,55 @@ public class AddAuthorFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_author, container, false);
 
         findComponents(view);
-        addAuthorViewModel = new ViewModelProvider(requireActivity()).get(AddAuthorViewModel.class);
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-
+        _addAuthorViewModel = new ViewModelProvider(requireActivity()).get(AddAuthorViewModel.class);
+        _sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         setUpAddAuthorButton();
-
-        addAuthorViewModel.getAuthorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
-            if (authorAdded != null) {
-                if(sharedViewModel.getLoading() && addAuthorViewModel.getThereIsAuthorToAdd()){
-                    Toast.makeText(getContext(), "Author added successfully", Toast.LENGTH_SHORT).show();
-                    sharedViewModel.setAuthorAddedMutableLiveData(authorAdded);
-                    addAuthorViewModel.setThereIsAuthorToAdd(false);
-                    navigateTo(getActivity(), R.id.action_navigation_add_author_fragment_to_navigation_authors);
-                }
-            } else {
-                Toast.makeText(getContext(), "Author not added", Toast.LENGTH_SHORT).show();
-            }
-        });
-        //Toast.makeText(getContext(), "Add Author Fragment", Toast.LENGTH_SHORT).show();
+        handleAuthorAdded();
 
         return view;
     }
 
+    /*
+        handleAuthorAdded : proc :
+            Handles the event when an author has been added
+        Parameter(s) :
+            void
+        Return :
+            void
+     */
+    public void handleAuthorAdded() {
+        // This piece of code will be executed when an author has been added to the API, to notify
+        // the AuthorsFragment that an author has been added so that they can update their UI.
+        _addAuthorViewModel.get_authorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
+            if (_sharedViewModel.getLoading() && authorAdded != null) {
+                Toast.makeText(getContext(), "Author added successfully", Toast.LENGTH_SHORT).show();
+                _sharedViewModel.setAuthorAddedMutableLiveData(authorAdded);
+                navigateTo(getActivity(), R.id.action_navigation_add_author_fragment_to_navigation_authors);
+            } else {
+                Toast.makeText(getContext(), "Author not added", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    /*
+        setUpAddAuthorButton : proc :
+            Calls the ViewModel method for adding a book, giving it the JSON to supply in the request
+        Parameter(s) :
+            void
+        Return :
+            void
+     */
     private void setUpAddAuthorButton() {
-        this.btn_add_author.setOnClickListener(
+        this._btnAddAuthor.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        sharedViewModel.setLoading(true);
-                        addAuthorViewModel.setThereIsAuthorToAdd(true);
+                        _sharedViewModel.setLoading(true);
                         JSONObject authorJSONObject = createAuthorJSONObject();
                         try {
-                            addAuthorViewModel.addAuthor(authorJSONObject);
+                            _addAuthorViewModel.addAuthor(authorJSONObject);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -78,20 +91,36 @@ public class AddAuthorFragment extends Fragment {
         );
     }
 
+    /*
+        createAuthorJSONObject : func :
+            Creates a JSON object from the author's first name and last name (to be given in the request)
+        Parameter(s) :
+            void
+        Return :
+            JSONObject : The JSON object created
+     */
     private JSONObject createAuthorJSONObject() {
         JSONObject authorJSONObject = new JSONObject();
         try {
-            authorJSONObject.put("firstname", this.tv_firstname.getText().toString());
-            authorJSONObject.put("lastname", this.tv_lastname.getText().toString());
+            authorJSONObject.put("firstname", this._tvFirstname.getText().toString());
+            authorJSONObject.put("lastname", this._tvLastname.getText().toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return authorJSONObject;
     }
 
+    /*
+        findComponents : proc :
+            Find the components in the view
+        Parameter(s) :
+            view : View : The view to find the components in
+        Return :
+            void
+     */
     private void findComponents(View view) {
-        this.tv_firstname = view.findViewById(R.id.tv_firstname);
-        this.tv_lastname = view.findViewById(R.id.tv_lastname);
-        this.btn_add_author = view.findViewById(R.id.btnAddAuthor);
+        this._tvFirstname = view.findViewById(R.id.tv_firstname);
+        this._tvLastname = view.findViewById(R.id.tv_lastname);
+        this._btnAddAuthor = view.findViewById(R.id.btnAddAuthor);
     }
 }

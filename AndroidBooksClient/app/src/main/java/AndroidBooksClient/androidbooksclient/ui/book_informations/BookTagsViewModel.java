@@ -9,14 +9,14 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 
 import AndroidBooksClient.androidbooksclient.Model.Tag;
-import AndroidBooksClient.androidbooksclient.Repository.AndroidBooksClientRepository;
+import AndroidBooksClient.androidbooksclient.Repository.BooksRepository;
 
 public class BookTagsViewModel extends AndroidViewModel {
-    AndroidBooksClientRepository repository;
+    BooksRepository repository;
     MutableLiveData<List<Tag>> tags;
     public BookTagsViewModel(@NonNull Application application) {
         super(application);
-        repository = new AndroidBooksClientRepository(application);
+        repository = new BooksRepository(application);
         tags = new MutableLiveData<>();
     }
 

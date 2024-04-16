@@ -19,57 +19,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.SharedViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AuthorsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AuthorsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private SharedViewModel _sharedViewModel;
+    private AuthorsViewModel _authorsViewModel;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private AuthorAdapter authorAdapter;
-    private SharedViewModel sharedViewModel;
-    private AuthorsViewModel authorsViewModel;
-    private FloatingActionButton fab;
-
-    public AuthorsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AuthorsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AuthorsFragment newInstance(String param1, String param2) {
-        AuthorsFragment fragment = new AuthorsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private AuthorAdapter _authorAdapter;
+    private FloatingActionButton _fab;
+    private RecyclerView _recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,64 +35,64 @@ public class AuthorsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_authors, container, false);
 
         findComponents(view);
-        // Retrieving the AuthorsViewModel
-        authorsViewModel = new ViewModelProvider(requireActivity()).get(AuthorsViewModel.class);
+        // Retrieving ViewModels
+        _authorsViewModel = new ViewModelProvider(requireActivity()).get(AuthorsViewModel.class);
+        _sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-        // Retrieving the RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.rv_authors);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        _recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2)); // To display the authors in a grid
 
-        // Retrieving the SharedViewModel to give for the AuthorAdapter
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        setUpFab(); // Set up the floating action button to add an author
 
-        setUpFab();
-
-        // Setting the adapter when the authorsLiveData changes
-        authorsViewModel.get_authors_live_data().observe(getViewLifecycleOwner(), authors -> {
-            authorAdapter = new AuthorAdapter(authors, sharedViewModel);
-            recyclerView.setAdapter(authorAdapter);
+        // When the list of authors changes, refresh the list of authors in the RecyclerView
+        _authorsViewModel.get_authors_live_data().observe(getViewLifecycleOwner(), authors -> {
+            _authorAdapter = new AuthorAdapter(authors, _sharedViewModel);
+            _recyclerView.setAdapter(_authorAdapter);
         });
 
-        //To update the list of books by an author when a book is added (using the book's authorId)
-        sharedViewModel.getBookToAddMutableLiveData().observe(getViewLifecycleOwner(), bookAdded -> {
-            if( bookAdded !=null ){
-                if( !authorsViewModel.getAuthor(bookAdded.getAuthorId()).getBooks().contains(bookAdded) ){
-                    authorsViewModel.addBookToAuthor(bookAdded);
-                }
+        // We check whether an author has been added in AddAuthorFragment to update the list of authorsLiveData
+        _sharedViewModel.getAuthorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
+            if (authorAdded != null && _sharedViewModel.getLoading()) {
+                _authorsViewModel.addAuthorToList(authorAdded);
+                _sharedViewModel.setLoading(false);
             }
         });
 
-        // We check whether an author has been added in AddAuthorFragment to update the list of livedata authors.
-        sharedViewModel.getAuthorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
-            if (authorAdded != null && sharedViewModel.getLoading()) {
-                authorsViewModel.addAuthorToList(authorAdded);
-                sharedViewModel.setLoading(false);
+        // We check whether we need to send a request to retrieve all the authors (if an author has been deleted)
+        _sharedViewModel.getReloadAuthorsLiveData().observe(getViewLifecycleOwner(), reloadAuthors -> {
+            if( reloadAuthors ){
+                _authorsViewModel.load_authors_from_api();
             }
         });
-
-        sharedViewModel.getAuthorIdDeletedLiveData().observe(getViewLifecycleOwner(), authorIdDeleted -> {
-            if (authorIdDeleted != null) {
-                String lastNameOfAuthorDeleted = authorsViewModel.deleteAuthor(authorIdDeleted);
-                if(lastNameOfAuthorDeleted.equals("")){
-                }
-                else{
-                    Toast.makeText(getContext(), "Author "+lastNameOfAuthorDeleted+" deleted", Toast.LENGTH_SHORT).show();
-            }
-        }});
 
         return view;
     }
 
+    /*
+        findComponents : proc :
+            Find the components in the view
+        Parameter(s) :
+            View view : The view in which we need to find the components
+        Return :
+            void
+     */
     private void findComponents(View view) {
-        this.fab = view.findViewById(R.id.fabAddAuthor);
+        this._fab = view.findViewById(R.id.fabAddAuthor);
+        _recyclerView = view.findViewById(R.id.rv_authors);
     }
 
+    /*
+        setUpFab : proc :
+            Set up the floating action button to navigate to the AddAuthorFragment when clicked on it
+        Parameter(s) :
+            void
+        Return :
+            void
+     */
     public void setUpFab() {
-        fab.setOnClickListener(
+        _fab.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT).show();
                         navigateTo(getActivity(), R.id.action_navigation_authors_to_navigation_add_author_fragment3);
                     }
                 }

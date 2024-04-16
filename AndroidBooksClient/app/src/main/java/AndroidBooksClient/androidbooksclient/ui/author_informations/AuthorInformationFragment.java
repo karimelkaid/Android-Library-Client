@@ -10,91 +10,102 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.SharedViewModel;
 import AndroidBooksClient.androidbooksclient.Utils;
 
 public class AuthorInformationFragment extends Fragment {
+    private AuthorInformationsViewModel _authorInformationsViewModel;
+    private AuthorBooksViewModel _authorBooksViewModel;
+    private SharedViewModel _sharedViewModel;
 
-    private TextView tvAuthorId;
-    private TextView tvAuthorFirstName;
-    private TextView tvAuthorLastName;
-    private Button btnDeleteAuthor;
-    private RecyclerView rvBooksOfAuthor;
-    private AuthorInformationsViewModel viewModel;
-    private AuthorBooksViewModel authorBooksViewModel;
-    private SharedViewModel sharedViewModel;
-    private boolean loading = false;    // To prevent unintentional execution of api actions
+    private TextView _tvAuthorId;
+    private TextView _tvAuthorFirstName;
+    private TextView _tvAuthorLastName;
+    private Button _btnDeleteAuthor;
+    private RecyclerView _rvBooksOfAuthor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_author_information, container, false);
         findComponents(view);
-        rvBooksOfAuthor.setLayoutManager(new LinearLayoutManager(getActivity()));
+        _rvBooksOfAuthor.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        viewModel = new ViewModelProvider(requireActivity()).get(AuthorInformationsViewModel.class);
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        authorBooksViewModel = new ViewModelProvider(requireActivity()).get(AuthorBooksViewModel.class);
-        //int authorId = 3;
-        int authorId = sharedViewModel.getSelectedAuthor().getValue();
+        // Retrieve ViewModels
+        _authorInformationsViewModel = new ViewModelProvider(requireActivity()).get(AuthorInformationsViewModel.class);
+        _sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        _authorBooksViewModel = new ViewModelProvider(requireActivity()).get(AuthorBooksViewModel.class);
+
+        int authorId = _sharedViewModel.getSelectedAuthor().getValue(); // Get the author ID to display from the shared view model
+
         setUpDeleteButton(authorId);
 
-        viewModel.getAuthorIdDeletedLiveData().observe(getViewLifecycleOwner(), authorIdDeleted -> {
-            if (loading == true && authorIdDeleted != null) {
-                sharedViewModel.setAuthorIdDeleted(authorIdDeleted);
-                loading = false;
-                Utils.navigateTo(getContext(), R.id.action_navigation_author_informations_to_navigation_authors2);
-        }});
-
-        authorBooksViewModel.loadBooksOfAuthor(authorId);
-        //Toast.makeText(getContext(), "Author ID: " + authorId, Toast.LENGTH_SHORT).show();
-        viewModel.loadAuthorToDisplay(authorId);
-
-        viewModel.getAuthorLiveData().observe(getViewLifecycleOwner(), author -> {
-            if (author != null) {
-                //Toast.makeText(getContext(), "author "+author.getId()+" selected change", Toast.LENGTH_SHORT).show();
-                tvAuthorId.setText("ID: " + author.getId());
-                tvAuthorFirstName.setText("First Name: " + author.getFirst_name());
-                tvAuthorLastName.setText("Last Name: " + author.getLast_name());
-                //rvBooksOfAuthor.setAdapter(new BookOfAuthorAdapter(author.getBooks(), sharedViewModel));
+        _authorInformationsViewModel.getAuthorDeleted().observe(getViewLifecycleOwner(), authorDeleted -> {
+            if( _sharedViewModel.getLoading() ){
+                if( authorDeleted == true ){
+                    _sharedViewModel.setReloadAuthors(true);
+                    _sharedViewModel.setReloadBooks(true);
+                    _authorInformationsViewModel.setAuthorDeleted(false);
+                      Utils.navigateTo(getContext(), R.id.action_navigation_author_informations_to_navigation_authors2);
+                }
             }
         });
 
-        //To update the list of books by an author when a book is added (using the book's authorId)
-        /*sharedViewModel.getBookToAddMutableLiveData().observe(getViewLifecycleOwner(), bookAdded -> {
-            if( bookAdded !=null ){
-                if( !authorsViewModel.getAuthor(bookAdded.getAuthorId()).getBooks().contains(bookAdded) ){
-                    authorsViewModel.addBookToAuthor(bookAdded);
-                }
+        // Load the author to display and his books
+        _authorInformationsViewModel.loadAuthorToDisplay(authorId);
+        _authorBooksViewModel.loadBooksOfAuthor(authorId);
+
+        // Once the author has been loaded, display the author's information (without his books because they are loaded separately in a RecyclerView)
+        _authorInformationsViewModel.get_authorLiveData().observe(getViewLifecycleOwner(), author -> {
+            if (author != null) {
+                _tvAuthorId.setText("ID: " + author.getId());
+                _tvAuthorFirstName.setText("First Name: " + author.getFirst_name());
+                _tvAuthorLastName.setText("Last Name: " + author.getLast_name());
             }
-        });*/
-        authorBooksViewModel.getBooksOfAuthorLiveData().observe(getViewLifecycleOwner(), books -> {
-            rvBooksOfAuthor.setAdapter(new BookOfAuthorAdapter(books, sharedViewModel));
+        });
+
+        // Once the books of the author have been loaded, display them in the RecyclerView
+        _authorBooksViewModel.get_booksOfAuthorLiveData().observe(getViewLifecycleOwner(), books -> {
+            _rvBooksOfAuthor.setAdapter(new BookOfAuthorAdapter(books, _sharedViewModel));
         });
 
         return view;
     }
 
+    /*
+        setUpDeleteButton : proc :
+            Sets up the delete button to delete an author
+        Parameter(s) :
+            int authorId : the ID of the author to delete
+        Return :
+            void
+    */
     private void setUpDeleteButton(int authorId) {
-        this.btnDeleteAuthor.setOnClickListener(
+        this._btnDeleteAuthor.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        loading = true;
-                        viewModel.deleteAuthor(authorId);
+                        _sharedViewModel.setLoading(true);
+                        _authorInformationsViewModel.deleteAuthor(authorId);
                     }
                 }
         );
     }
 
+    /*
+        findComponents : proc :
+            Find the components in the view
+        Parameter(s) :
+            View view : the view in which to find the components
+        Return :
+            void
+    */
     private void findComponents(View view) {
-        tvAuthorId = view.findViewById(R.id.tv_author_id);
-        tvAuthorFirstName = view.findViewById(R.id.tv_author_first_name);
-        tvAuthorLastName = view.findViewById(R.id.tv_author_last_name);
-        rvBooksOfAuthor = view.findViewById(R.id.rv_books_of_author);
-        this.btnDeleteAuthor = view.findViewById(R.id.btn_delete_author);
+        _tvAuthorId = view.findViewById(R.id.tv_author_id);
+        _tvAuthorFirstName = view.findViewById(R.id.tv_author_first_name);
+        _tvAuthorLastName = view.findViewById(R.id.tv_author_last_name);
+        _rvBooksOfAuthor = view.findViewById(R.id.rv_books_of_author);
+        this._btnDeleteAuthor = view.findViewById(R.id.btn_delete_author);
     }
 }

@@ -1,45 +1,33 @@
 package AndroidBooksClient.androidbooksclient.ui.books;
 
 import android.app.Application;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import AndroidBooksClient.androidbooksclient.Repository.AndroidBooksClientRepository;
+import AndroidBooksClient.androidbooksclient.Repository.BooksRepository;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 
 public class BooksViewModel extends AndroidViewModel {
-    AndroidBooksClientRepository repository;
+    BooksRepository repository;
     private final MutableLiveData<List<Book>> booksLiveData;
     //private static int nextId = 1;
     RequestQueue queue;
-    private static final String adr_ip_pc_on_the_network = "192.168.161.235";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
     private boolean api_loaded;
     private MutableLiveData<Book> bookUpdated;
     private boolean updateOrNot;
 
     public BooksViewModel(@NonNull Application application) {
         super(application);
-        repository = new AndroidBooksClientRepository(application);
-        booksLiveData = new MutableLiveData<>(new ArrayList<>());
+        repository = new BooksRepository(application);
+        booksLiveData = new MutableLiveData<>();
         bookUpdated = new MutableLiveData<>();
         api_loaded = false;
         updateOrNot = false;
@@ -59,7 +47,7 @@ public class BooksViewModel extends AndroidViewModel {
         Return :
             void
     */
-    private void loadData() {
+    public void loadData() {
         repository.loadAllBooks(booksLiveData);
     }
 
@@ -121,5 +109,18 @@ public class BooksViewModel extends AndroidViewModel {
 
         // Update the LiveData with the modified books list
         this.booksLiveData.setValue(books);
+    }
+
+    public void deleteBooksOfAuthor(Integer authorIdDeleted) {
+        List<Book> books = booksLiveData.getValue();
+        if( books != null ){
+            for(int i = 0; i < books.size(); i++){
+                if( books.get(i).getAuthorId() == authorIdDeleted ){
+                    books.remove(i);
+                    break;
+                }
+            }
+        }
+        booksLiveData.setValue(books);
     }
 }

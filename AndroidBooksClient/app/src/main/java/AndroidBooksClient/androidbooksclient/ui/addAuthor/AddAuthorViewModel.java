@@ -13,32 +13,28 @@ import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.Repository.AuthorsRepository;
 
 public class AddAuthorViewModel extends AndroidViewModel {
-    AuthorsRepository authorsRepository;
-    private MutableLiveData<Author> authorAddedMutableLiveData;
-    private boolean thereIsAuthorToAdd;
+    AuthorsRepository _authorsRepository;
+    private MutableLiveData<Author> _authorAddedMutableLiveData;
     public AddAuthorViewModel(@NonNull Application application) {
         super(application);
-        this.authorsRepository = new AuthorsRepository(application);
-        this.authorAddedMutableLiveData = new MutableLiveData<>();
-        this.thereIsAuthorToAdd = false;
+        this._authorsRepository = new AuthorsRepository(application);
+        this._authorAddedMutableLiveData = new MutableLiveData<>();
     }
 
-    public MutableLiveData<Author> getAuthorAddedMutableLiveData(){
-        return this.authorAddedMutableLiveData;
-    }
-    public void setAuthorAddedMutableLiveData(Author authorAdded){
-        this.authorAddedMutableLiveData.setValue(authorAdded);
-    }
-
+    /*
+        addAuthor : proc :
+            Calls a method in the repository to send a request to add an author to the API
+        Parameter(s) :
+            JSONObject authorJSONObject : The author to be added in JSON format to be sent to the API
+        Return :
+            void
+    */
     public void addAuthor(JSONObject authorJSONObject) throws JSONException {
-        this.authorsRepository.addAuthor(authorJSONObject, authorAddedMutableLiveData);
+        this._authorsRepository.addAuthor(authorJSONObject, _authorAddedMutableLiveData);
     }
 
-    public boolean getThereIsAuthorToAdd() {
-        return thereIsAuthorToAdd;
-    }
-
-    public void setThereIsAuthorToAdd(boolean b) {
-        this.thereIsAuthorToAdd = b;
+    // Getter(s)
+    public MutableLiveData<Author> get_authorAddedMutableLiveData(){
+        return this._authorAddedMutableLiveData;
     }
 }

@@ -12,21 +12,28 @@ import AndroidBooksClient.androidbooksclient.Model.Book;
 import AndroidBooksClient.androidbooksclient.Repository.AuthorsRepository;
 
 public class AuthorBooksViewModel extends AndroidViewModel {
-    AuthorsRepository authorsRepository;
-    private MutableLiveData<List<Book>> booksOfAuthorLiveData;
+    AuthorsRepository _authorsRepository;
+    private MutableLiveData<List<Book>> _booksOfAuthorLiveData;
     public AuthorBooksViewModel(@NonNull Application application) {
         super(application);
-        this.authorsRepository = new AuthorsRepository(application);
-        this.booksOfAuthorLiveData = new MutableLiveData<>();
+        this._authorsRepository = new AuthorsRepository(application);
+        this._booksOfAuthorLiveData = new MutableLiveData<>();
     }
 
+    /*
+        loadBooksOfAuthor : proc :
+            Calls a method in the repository to send a request to get the books of an author from the API
+        Parameter(s) :
+            int authorId : The id of the author whose books will be fetched
+        Return :
+            void
+    */
     public void loadBooksOfAuthor(int authorId) {
-        authorsRepository.loadBooksOfAuthor(authorId, booksOfAuthorLiveData);
+        _authorsRepository.loadBooksOfAuthor(authorId, _booksOfAuthorLiveData);
     }
-    public MutableLiveData<List<Book>> getBooksOfAuthorLiveData() {
-        return booksOfAuthorLiveData;
-    }
-    public void setBooksOfAuthorLiveData(MutableLiveData<List<Book>> booksOfAuthorLiveData) {
-        this.booksOfAuthorLiveData = booksOfAuthorLiveData;
+
+    // Getter(s)
+    public MutableLiveData<List<Book>> get_booksOfAuthorLiveData() {
+        return _booksOfAuthorLiveData;
     }
 }

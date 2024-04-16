@@ -85,35 +85,63 @@ public class BooksFragment extends Fragment implements OnItemClickListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));   // Setting the layout manager for the RecyclerView
 
         // ViewModel
-        booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        booksViewModel = new ViewModelProvider(requireActivity()).get(BooksViewModel.class);
         //bookAdapter = new BookAdapter(booksViewModel.getBooks().getValue());
-        booksViewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
-            //onItemClicked(0);
-            // Instanciate the adapter with the list of books when the list is updated (because request is asynchronous)
-            bookAdapter = new BookAdapter(books, this, sharedViewModel);
-            // Set the books in the adapter
-            //bookAdapter.setBooks(books);
 
-            // Set the adapter to the RecyclerView
-            recyclerView.setAdapter(bookAdapter);
+        sharedViewModel.getReloadBooksLiveData().observe(getViewLifecycleOwner(), reloadBooks -> {
+            if( reloadBooks ){
+                booksViewModel.loadData();
+            }
         });
 
+
+        booksViewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
+            if( books == null ){
+                return;
+            }
+            if( sharedViewModel.getReloadBooksLiveData().getValue() == false ){
+                bookAdapter = new BookAdapter(books, this, sharedViewModel);
+                // Set the books in the adapter
+                //bookAdapter.setBooks(books);
+
+                // Set the adapter to the RecyclerView
+                recyclerView.setAdapter(bookAdapter);
+            }
+            else{
+                sharedViewModel.setReloadBooks(false);
+                //onItemClicked(0);
+                // Instanciate the adapter with the list of books when the list is updated (because request is asynchronous)
+                bookAdapter = new BookAdapter(books, this, sharedViewModel);
+                // Set the books in the adapter
+                //bookAdapter.setBooks(books);
+
+                // Set the adapter to the RecyclerView
+                recyclerView.setAdapter(bookAdapter);
+                //Toast.makeText(getContext(), "Books loaded !", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
         sharedViewModel.getBookToAddMutableLiveData().observe(getViewLifecycleOwner(), newBook -> {
-            if( newBook != null ){
+            if( newBook != null && sharedViewModel.getLoading() ){
                 booksViewModel.addBookToList(newBook);
-                sharedViewModel.setBookToAddMutable(null);  // To prevent the code from re-triggering after returning to this fragment without having added a book
+                sharedViewModel.setBookToAddMutable(null);
+                sharedViewModel.setLoading(false);    // To prevent the code from re-triggering after returning to this fragment without having added a book
                 Toast.makeText(getContext(), "Book added !", Toast.LENGTH_SHORT).show();
             }
         });
 
         sharedViewModel.getBookDeletedIdMutableLiveData().observe(getViewLifecycleOwner(), bookDeletedId -> {
-            if( bookDeletedId != -1 ){
+            if( sharedViewModel.getLoading() && bookDeletedId != -1 ){
                 booksViewModel.deleteBookLocally(bookDeletedId);
                 sharedViewModel.setBookDeletedIdMutable(-1);
+                sharedViewModel.setLoading(false);
                 Toast.makeText(getContext(), "Book deleted !", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         findComponents(view);
         setUpFab();

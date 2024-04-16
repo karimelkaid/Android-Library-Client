@@ -6,16 +6,18 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import AndroidBooksClient.androidbooksclient.Repository.AndroidBooksClientRepository;
+import AndroidBooksClient.androidbooksclient.Repository.BooksRepository;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 
 public class BookInformationsViewModel extends AndroidViewModel {
-    private AndroidBooksClientRepository repository;
+    private BooksRepository repository;
     private MutableLiveData<Book> bookMutableLiveData;
+    private MutableLiveData<Boolean> bookDeletedLiveData;
     public BookInformationsViewModel(@NonNull Application application) {
         super(application);
-        repository = new AndroidBooksClientRepository(application);
+        repository = new BooksRepository(application);
         bookMutableLiveData = new MutableLiveData<>();
+        bookDeletedLiveData = new MutableLiveData<>(false);
     }
 
     public MutableLiveData<Book> getBookMutableLiveData(){
@@ -25,9 +27,14 @@ public class BookInformationsViewModel extends AndroidViewModel {
         this.bookMutableLiveData.setValue(book);
     }
 
-    public void deleteBook(MutableLiveData<Integer> bookDeletedIdMutableLiveData){
-        if( this.bookMutableLiveData.getValue() != null ){
-            repository.deleteBook(bookMutableLiveData, bookDeletedIdMutableLiveData);
-        }
+    public MutableLiveData<Boolean> getBookDeletedLiveData(){
+        return bookDeletedLiveData;
+    }
+    public void setBookDeletedLiveData(boolean b){
+        this.bookDeletedLiveData.setValue(b);
+    }
+
+    public void deleteBook(int bookId){
+        repository.deleteBook(bookId, bookDeletedLiveData);
     }
 }

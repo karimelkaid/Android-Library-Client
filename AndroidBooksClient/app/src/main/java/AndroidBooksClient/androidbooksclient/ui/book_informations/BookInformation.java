@@ -105,6 +105,7 @@ public class BookInformation extends Fragment {
         setUpBackButton();
 
         setUpDeleteBookButton(sharedViewModel.getSelectedBookId().getValue());
+
         // Updating text views with the book information
         bookInformationsViewModel = new ViewModelProvider(requireActivity()).get(BookInformationsViewModel.class);
         //int bookId = sharedViewModel.getSelectedBookId().getValue();
@@ -134,6 +135,14 @@ public class BookInformation extends Fragment {
                 this.tv_publication_year.setText("No specified publication year");
             }
             this.tv_author_id.setText("Author ID : "+book.getAuthorId());
+        });
+
+        bookInformationsViewModel.getBookDeletedLiveData().observe(getViewLifecycleOwner(), bookDeleted -> {
+            if(sharedViewModel.getLoading() && bookDeleted){
+                //sharedViewModel.setLoading(false);
+                sharedViewModel.setBookDeletedIdMutableLiveData(bookId);
+                navigateTo(R.id.action_navigation_bookInformation_to_navigation_books);
+            }
         });
 
         //updateBookInformation();
@@ -239,8 +248,9 @@ public class BookInformation extends Fragment {
                             }
 
                         });*/
-                        bookInformationsViewModel.deleteBook(sharedViewModel.getBookDeletedIdMutableLiveData());    // 
-                        navigateTo(R.id.action_navigation_bookInformation_to_navigation_books);
+                        sharedViewModel.setLoading(true);
+                        bookInformationsViewModel.deleteBook(bookId);    //
+                        //navigateTo(R.id.action_navigation_bookInformation_to_navigation_books);
                     }
                 }
         );

@@ -17,14 +17,15 @@ import java.util.List;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.SharedViewModel;
+import AndroidBooksClient.androidbooksclient.Utils;
 
 public class BookOfAuthorAdapter extends RecyclerView.Adapter<BookOfAuthorViewHolder> {
-    List<Book> books_of_author;
-    SharedViewModel sharedViewModel;
+    List<Book> _booksOfAuthor;
+    SharedViewModel _sharedViewModel;
 
     public BookOfAuthorAdapter(List<Book> books_of_author, SharedViewModel sharedViewModel) {
-        this.books_of_author = books_of_author;
-        this.sharedViewModel = sharedViewModel;
+        _booksOfAuthor = books_of_author;
+        _sharedViewModel = sharedViewModel;
     }
 
     @NonNull
@@ -36,14 +37,16 @@ public class BookOfAuthorAdapter extends RecyclerView.Adapter<BookOfAuthorViewHo
 
     @Override
     public void onBindViewHolder(@NonNull BookOfAuthorViewHolder holder, int position) {
-        Book current_book = books_of_author.get(position);
+        Book current_book = _booksOfAuthor.get(position);
         holder.get_tv_book_of_author_title().setText("#"+(position+1)+" : "+current_book.getTitle());
+
+        // Once a book is clicked, save its informations in the shared preferences and navigate to the BookInformationFragment to display the book's informations
         holder.get_tv_book_of_author_title().setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        sharedViewModel.setSelectedBookId(current_book.getId());
-                        navigateTo(R.id.action_navigation_author_informations_to_navigation_bookInformation, v);
+                        _sharedViewModel.setSelectedBookId(current_book.getId());   // Save the book's id in the shared view model
+                        Utils.navigateTo(v.getContext(), R.id.action_navigation_author_informations_to_navigation_bookInformation); // Navigate to the BookInformationFragment
                     }
                 }
         );
@@ -51,27 +54,6 @@ public class BookOfAuthorAdapter extends RecyclerView.Adapter<BookOfAuthorViewHo
 
     @Override
     public int getItemCount() {
-        return books_of_author.size();
+        return _booksOfAuthor.size();
     }
-
-    public void saveBookInformations(Context context, Book book){
-        // Retrieve the shared preferences
-        SharedPreferences sharedPreferences = context.getSharedPreferences("BookInfo", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        // Save the book informations
-        editor.putInt("id", book.getId());
-        editor.putString("title", book.getTitle());
-        editor.putInt("publication_year", book.getPublication_year());
-        editor.putInt("author_id", book.getAuthorId());
-
-        editor.apply();
-    }
-
-    public void navigateTo(int actionId, View v) {
-        NavController navController = Navigation.findNavController((Activity) v.getContext(), R.id.nav_host_fragment_activity_main);
-        navController.navigate(actionId);
-    }
-
-
 }

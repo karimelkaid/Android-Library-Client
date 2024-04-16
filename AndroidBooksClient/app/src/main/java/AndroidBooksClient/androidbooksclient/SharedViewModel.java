@@ -7,6 +7,8 @@ import androidx.dynamicanimation.animation.FloatValueHolder;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import java.net.HttpCookie;
+
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 
@@ -19,6 +21,9 @@ public class SharedViewModel extends AndroidViewModel {
     private MutableLiveData<Author> authorAddedMutableLiveData;
     private MutableLiveData<Integer> authorIdDeletedLiveData;
     private boolean loading;
+    private MutableLiveData<Boolean> reloadAuthorsLiveData;
+    private MutableLiveData<Boolean> reloadBooksLiveData;
+    private MutableLiveData<Boolean> authorDeletedLiveData;
 
     public SharedViewModel(@NonNull Application application) {
         super(application);
@@ -30,7 +35,18 @@ public class SharedViewModel extends AndroidViewModel {
         authorAddedMutableLiveData = new MutableLiveData<>();
         authorIdDeletedLiveData = new MutableLiveData<>();
         loading = false;
+        reloadAuthorsLiveData = new MutableLiveData<>(false);
+        reloadBooksLiveData = new MutableLiveData<>(false);
+        authorDeletedLiveData = new MutableLiveData<>(false);
     }
+
+    public MutableLiveData<Boolean> getAuthorDeleted() {
+        return authorDeletedLiveData;
+    }
+    public void setAuthorDeleted(boolean authorDeleted) {
+        authorDeletedLiveData.setValue(authorDeleted);
+    }
+
 
     public MutableLiveData<Integer> getSelectedAuthor() {
         return selectedAuthor;
@@ -94,5 +110,19 @@ public class SharedViewModel extends AndroidViewModel {
     }
     public boolean getLoading() {
         return loading;
+    }
+
+    public void setReloadAuthors(boolean b) {
+        this.reloadAuthorsLiveData.setValue(b);
+    }
+    public MutableLiveData<Boolean> getReloadAuthorsLiveData() {
+        return reloadAuthorsLiveData;
+    }
+
+    public void setReloadBooks(boolean b) {
+        this.reloadBooksLiveData.setValue(b);
+    }
+    public MutableLiveData<Boolean> getReloadBooksLiveData() {
+        return reloadBooksLiveData;
     }
 }
