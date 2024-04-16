@@ -25,6 +25,21 @@
         android:layout_height="wrap_content"
         android:text="@string/last_name" />
 
+    <LinearLayout
+        android:id="@+id/ll_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_delete_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/delete"
+            android:visibility="visible" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tv_author_books"
         android:layout_width="match_parent"
