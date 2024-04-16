@@ -107,10 +107,21 @@ public class AuthorsFragment extends Fragment {
 
         // We check whether an author has been added in AddAuthorFragment to update the list of livedata authors.
         sharedViewModel.getAuthorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
-            if (authorAdded != null) {
+            if (authorAdded != null && sharedViewModel.getLoading()) {
                 authorsViewModel.addAuthorToList(authorAdded);
+                sharedViewModel.setLoading(false);
             }
         });
+
+        sharedViewModel.getAuthorIdDeletedLiveData().observe(getViewLifecycleOwner(), authorIdDeleted -> {
+            if (authorIdDeleted != null) {
+                String lastNameOfAuthorDeleted = authorsViewModel.deleteAuthor(authorIdDeleted);
+                if(lastNameOfAuthorDeleted.equals("")){
+                }
+                else{
+                    Toast.makeText(getContext(), "Author "+lastNameOfAuthorDeleted+" deleted", Toast.LENGTH_SHORT).show();
+            }
+        }});
 
         return view;
     }

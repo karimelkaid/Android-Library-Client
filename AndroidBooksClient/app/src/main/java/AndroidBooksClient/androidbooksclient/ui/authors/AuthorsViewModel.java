@@ -128,4 +128,18 @@ public class AuthorsViewModel extends AndroidViewModel {
         }
         authorsLiveData.setValue(authors);
     }
+
+    public String deleteAuthor(Integer authorIdDeleted) {
+        String lastNameOfAuthorDeleted = "";
+        List<Author> authors = authorsLiveData.getValue();
+        for( Author author : authors ){
+            if( author.getId() == authorIdDeleted ){
+                lastNameOfAuthorDeleted = author.getLast_name();
+                authors.remove(author);
+                break;
+            }
+        }
+        authorsLiveData.setValue(authors);
+        return lastNameOfAuthorDeleted;
+    }
 }

@@ -28,6 +28,7 @@ public class AddAuthorFragment extends Fragment {
     Button btn_add_author;
     AddAuthorViewModel addAuthorViewModel;
     SharedViewModel sharedViewModel;
+    private boolean loading = false;    // To prevent unintentional execution of api actions
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +45,7 @@ public class AddAuthorFragment extends Fragment {
 
         addAuthorViewModel.getAuthorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
             if (authorAdded != null) {
-                if(addAuthorViewModel.getThereIsAuthorToAdd()){
+                if(sharedViewModel.getLoading() && addAuthorViewModel.getThereIsAuthorToAdd()){
                     Toast.makeText(getContext(), "Author added successfully", Toast.LENGTH_SHORT).show();
                     sharedViewModel.setAuthorAddedMutableLiveData(authorAdded);
                     addAuthorViewModel.setThereIsAuthorToAdd(false);
@@ -64,6 +65,7 @@ public class AddAuthorFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        sharedViewModel.setLoading(true);
                         addAuthorViewModel.setThereIsAuthorToAdd(true);
                         JSONObject authorJSONObject = createAuthorJSONObject();
                         try {

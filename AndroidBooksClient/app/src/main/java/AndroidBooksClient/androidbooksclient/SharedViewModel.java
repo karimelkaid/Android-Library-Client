@@ -17,6 +17,8 @@ public class SharedViewModel extends AndroidViewModel {
     private MutableLiveData<Book> bookToAddMutableLiveData;
     private MutableLiveData<Integer> bookDeletedIdMutableLiveData;  // When I delete a book, I set its attribute to null, but I need its id to delete it from the other ViewModels too
     private MutableLiveData<Author> authorAddedMutableLiveData;
+    private MutableLiveData<Integer> authorIdDeletedLiveData;
+    private boolean loading;
 
     public SharedViewModel(@NonNull Application application) {
         super(application);
@@ -26,6 +28,8 @@ public class SharedViewModel extends AndroidViewModel {
         bookToAddMutableLiveData = new MutableLiveData<>();
         bookDeletedIdMutableLiveData = new MutableLiveData<>();
         authorAddedMutableLiveData = new MutableLiveData<>();
+        authorIdDeletedLiveData = new MutableLiveData<>();
+        loading = false;
     }
 
     public MutableLiveData<Integer> getSelectedAuthor() {
@@ -76,5 +80,19 @@ public class SharedViewModel extends AndroidViewModel {
     }
     public MutableLiveData<Author> getAuthorAddedMutableLiveData() {
         return this.authorAddedMutableLiveData;
+    }
+
+    public void setAuthorIdDeleted(Integer authorIdDeleted) {
+        authorIdDeletedLiveData.setValue(authorIdDeleted);
+    }
+    public MutableLiveData<Integer> getAuthorIdDeletedLiveData() {
+        return authorIdDeletedLiveData;
+    }
+
+    public void setLoading(boolean loading) {
+        this.loading = loading;
+    }
+    public boolean getLoading() {
+        return loading;
     }
 }

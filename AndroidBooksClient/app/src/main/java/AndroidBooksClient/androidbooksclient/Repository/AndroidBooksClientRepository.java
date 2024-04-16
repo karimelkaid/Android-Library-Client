@@ -317,4 +317,25 @@ Return :
 
         queue.add(request);
     }
+
+    public void deleteAuthor(int authorId, MutableLiveData<Integer> authorIdDeletedLiveData) {
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.DELETE, "http://"+ this.adr_ip_pc_on_the_network +":3000/authors/"+authorId,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Authors repository", "Response is: " + response);
+                        authorIdDeletedLiveData.setValue(authorId);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(application, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                        Log.d("Authors repository", "Error: " + error.toString());
+                    }
+                }
+        );
+        queue.add(stringRequest);
+    }
 }

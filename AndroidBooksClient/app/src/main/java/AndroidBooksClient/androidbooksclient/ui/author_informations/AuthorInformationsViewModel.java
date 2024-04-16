@@ -11,11 +11,13 @@ import AndroidBooksClient.androidbooksclient.Model.Author;
 public class AuthorInformationsViewModel extends AndroidViewModel {
     private AndroidBooksClientRepository repository;
     private MutableLiveData<Author> authorLiveData;
+    private MutableLiveData<Integer> authorIdDeletedLiveData;
 
     public AuthorInformationsViewModel(@NonNull Application application) {
         super(application);
         repository = new AndroidBooksClientRepository(application);
         authorLiveData = new MutableLiveData<>();
+        authorIdDeletedLiveData = new MutableLiveData<>();
     }
 
     public LiveData<Author> getAuthorLiveData() {
@@ -24,5 +26,15 @@ public class AuthorInformationsViewModel extends AndroidViewModel {
 
     public void loadAuthorToDisplay(int authorId) {
         repository.loadAuthorToDisplay(authorId, authorLiveData);
+    }
+
+    public void deleteAuthor(int authorId) {
+        repository.deleteAuthor(authorId, authorIdDeletedLiveData);
+    }
+    public MutableLiveData<Integer> getAuthorIdDeletedLiveData() {
+        return authorIdDeletedLiveData;
+    }
+    public void setAuthorIdDeletedLiveData(int authorId) {
+        authorIdDeletedLiveData.setValue(authorId);
     }
 }

@@ -8,22 +8,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.SharedViewModel;
+import AndroidBooksClient.androidbooksclient.Utils;
 
 public class AuthorInformationFragment extends Fragment {
 
     private TextView tvAuthorId;
     private TextView tvAuthorFirstName;
     private TextView tvAuthorLastName;
+    private Button btnDeleteAuthor;
     private RecyclerView rvBooksOfAuthor;
     private AuthorInformationsViewModel viewModel;
     private AuthorBooksViewModel authorBooksViewModel;
     private SharedViewModel sharedViewModel;
+    private boolean loading = false;    // To prevent unintentional execution of api actions
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,14 +40,22 @@ public class AuthorInformationFragment extends Fragment {
         authorBooksViewModel = new ViewModelProvider(requireActivity()).get(AuthorBooksViewModel.class);
         //int authorId = 3;
         int authorId = sharedViewModel.getSelectedAuthor().getValue();
-        authorBooksViewModel.loadBooksOfAuthor(authorId);
+        setUpDeleteButton(authorId);
 
+        viewModel.getAuthorIdDeletedLiveData().observe(getViewLifecycleOwner(), authorIdDeleted -> {
+            if (loading == true && authorIdDeleted != null) {
+                sharedViewModel.setAuthorIdDeleted(authorIdDeleted);
+                loading = false;
+                Utils.navigateTo(getContext(), R.id.action_navigation_author_informations_to_navigation_authors2);
+        }});
+
+        authorBooksViewModel.loadBooksOfAuthor(authorId);
         //Toast.makeText(getContext(), "Author ID: " + authorId, Toast.LENGTH_SHORT).show();
         viewModel.loadAuthorToDisplay(authorId);
 
         viewModel.getAuthorLiveData().observe(getViewLifecycleOwner(), author -> {
             if (author != null) {
-                Toast.makeText(getContext(), "author "+author.getId()+" selected change", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "author "+author.getId()+" selected change", Toast.LENGTH_SHORT).show();
                 tvAuthorId.setText("ID: " + author.getId());
                 tvAuthorFirstName.setText("First Name: " + author.getFirst_name());
                 tvAuthorLastName.setText("Last Name: " + author.getLast_name());
@@ -66,10 +78,23 @@ public class AuthorInformationFragment extends Fragment {
         return view;
     }
 
+    private void setUpDeleteButton(int authorId) {
+        this.btnDeleteAuthor.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        loading = true;
+                        viewModel.deleteAuthor(authorId);
+                    }
+                }
+        );
+    }
+
     private void findComponents(View view) {
         tvAuthorId = view.findViewById(R.id.tv_author_id);
         tvAuthorFirstName = view.findViewById(R.id.tv_author_first_name);
         tvAuthorLastName = view.findViewById(R.id.tv_author_last_name);
         rvBooksOfAuthor = view.findViewById(R.id.rv_books_of_author);
+        this.btnDeleteAuthor = view.findViewById(R.id.btn_delete_author);
     }
 }
