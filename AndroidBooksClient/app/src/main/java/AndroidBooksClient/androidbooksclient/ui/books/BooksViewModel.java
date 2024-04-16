@@ -16,54 +16,45 @@ import AndroidBooksClient.androidbooksclient.Repository.BooksRepository;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 
 public class BooksViewModel extends AndroidViewModel {
-    BooksRepository repository;
-    private final MutableLiveData<List<Book>> booksLiveData;
-    //private static int nextId = 1;
-    RequestQueue queue;
-    private boolean api_loaded;
-    private MutableLiveData<Book> bookUpdated;
-    private boolean updateOrNot;
+    BooksRepository _repository;
+    private final MutableLiveData<List<Book>> _booksLiveData;
+    RequestQueue _queue;
+    private MutableLiveData<Book> _bookUpdated;
 
     public BooksViewModel(@NonNull Application application) {
         super(application);
-        repository = new BooksRepository(application);
-        booksLiveData = new MutableLiveData<>();
-        bookUpdated = new MutableLiveData<>();
-        api_loaded = false;
-        updateOrNot = false;
-        queue = Volley.newRequestQueue(getApplication());
+        _repository = new BooksRepository(application);
+        _booksLiveData = new MutableLiveData<>();
+        _bookUpdated = new MutableLiveData<>();
+        _queue = Volley.newRequestQueue(getApplication());
         loadData();
     }
 
-    /*public static int getNextId() {
-        return nextId;
-    }*/
-
     /*
         loadData : proc :
-            Load the list of books from the server using API
+            Load all the books from the API and update the LiveData to notify the observers when the data is ready
         Parameter(s) :
-            context : Context : The context of the application
+            void
         Return :
             void
     */
     public void loadData() {
-        repository.loadAllBooks(booksLiveData);
+        _repository.loadAllBooks(_booksLiveData);
     }
 
 
     /*
         addBookToList : proc :
-            Add a book to the list of books
+            Adds a book to the list of books booksLiveData
         Parameter(s) :
-            newBook : Book : The book to add
+            Book newBook : The book to be added to the list
         Return :
             void
     */
     public void addBookToList(Book newBook) {
-        List<Book> books = booksLiveData.getValue();
+        List<Book> books = _booksLiveData.getValue();
         books.add(newBook);
-        booksLiveData.setValue(books);
+        _booksLiveData.setValue(books);
     }
 
     /*
@@ -75,13 +66,13 @@ public class BooksViewModel extends AndroidViewModel {
             MutableLiveData<List<Book>> : The list of books
     */
     public MutableLiveData<List<Book>> getBooks() {
-        return booksLiveData;
+        return _booksLiveData;
     }
 
 
     /*
     deleteBookLocally : procedure :
-        Removes a book from the list of books (local) based on the book ID
+        Removes a book from the list of books booksLiveData (local) based on the book ID
     Parameter(s) :
         bookId : int : The ID of the book to remove.
     Return :
@@ -101,26 +92,14 @@ public class BooksViewModel extends AndroidViewModel {
 
                 if( current_book.getId() == bookId){
                     iterator.remove();  // Since the book to delete has been found and removed, break out of the loop
-                    this.bookUpdated.setValue(current_book);
+                    this._bookUpdated.setValue(current_book);
                     break;
                 }
             }
         }
 
         // Update the LiveData with the modified books list
-        this.booksLiveData.setValue(books);
+        this._booksLiveData.setValue(books);
     }
 
-    public void deleteBooksOfAuthor(Integer authorIdDeleted) {
-        List<Book> books = booksLiveData.getValue();
-        if( books != null ){
-            for(int i = 0; i < books.size(); i++){
-                if( books.get(i).getAuthorId() == authorIdDeleted ){
-                    books.remove(i);
-                    break;
-                }
-            }
-        }
-        booksLiveData.setValue(books);
-    }
 }

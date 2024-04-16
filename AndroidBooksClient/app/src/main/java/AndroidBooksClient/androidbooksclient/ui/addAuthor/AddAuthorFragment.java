@@ -38,20 +38,7 @@ public class AddAuthorFragment extends Fragment {
         _sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         setUpAddAuthorButton();
-        handleAuthorAdded();
 
-        return view;
-    }
-
-    /*
-        handleAuthorAdded : proc :
-            Handles the event when an author has been added
-        Parameter(s) :
-            void
-        Return :
-            void
-     */
-    public void handleAuthorAdded() {
         // This piece of code will be executed when an author has been added to the API, to notify
         // the AuthorsFragment that an author has been added so that they can update their UI.
         _addAuthorViewModel.get_authorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
@@ -63,6 +50,8 @@ public class AddAuthorFragment extends Fragment {
                 Toast.makeText(getContext(), "Author not added", Toast.LENGTH_SHORT).show();
             }
         });
+
+        return view;
     }
 
 

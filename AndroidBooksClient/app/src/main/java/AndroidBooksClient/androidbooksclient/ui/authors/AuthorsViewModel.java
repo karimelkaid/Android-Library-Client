@@ -32,11 +32,26 @@ public class AuthorsViewModel extends AndroidViewModel {
         load_authors_from_api();
     }
 
+    /*
+        load_authors_from_api : proc :
+            Calls a method in the repository to send a request to get the authors from the API
+        Parameter(s) :
+            None
+        Return :
+            void
+    */
     public void load_authors_from_api() {
         _authorsRepository.load_authors_from_api(_authorsLiveData);
     }
 
-
+    /*
+        addAuthorToList : proc :
+            Adds an author to the list of authors
+        Parameter(s) :
+            Author newAuthor : The author to be added to the list
+        Return :
+            void
+    */
     public void addAuthorToList(Author newAuthor) {
         List<Author> authors = this._authorsLiveData.getValue();
         authors.add(newAuthor);
@@ -44,6 +59,14 @@ public class AuthorsViewModel extends AndroidViewModel {
         _authorsLiveData.setValue(authors);
     }
 
+    /*
+        sortByLastName : proc :
+            Sorts the list of authors by last name
+        Parameter(s) :
+            List<Author> authors : The list of authors to be sorted
+        Return :
+            void
+    */
     private void sortByLastName(List<Author> authors) {
         for( int i = 0; i < authors.size(); i++ ){
             for( int j = i+1; j < authors.size(); j++ ){
@@ -56,78 +79,9 @@ public class AuthorsViewModel extends AndroidViewModel {
         }
     }
 
-
+    // Getter(s)
     public MutableLiveData<List<Author>> get_authors_live_data() {
         return _authorsLiveData;
     }
 
-    public void updateAuthorsLiveData(int authorId, Book book) {
-        List<Author> authors = _authorsLiveData.getValue();
-        for( Author author : authors ){
-            if( author.getId() == authorId ){
-                author.addBook(book);
-            }
-        }
-        _authorsLiveData.setValue(authors);
-    }
-
-    public void set_authorEdited(int authorId) {
-        List<Author> authors = _authorsLiveData.getValue();
-        for( Author author : authors ){
-            if( author.getId() == authorId ){
-                _authorEdited.setValue(author);
-            }
-        }
-        _authorsLiveData.setValue(authors);
-    }
-
-    public MutableLiveData<Author> get_authorEdited() {
-        return _authorEdited;
-    }
-
-    public Author getAuthor(int id) {
-        List<Author> authors = _authorsLiveData.getValue();
-        for( Author author : authors ){
-            if( author.getId() == id ){
-                return author;
-            }
-        }
-        return null;
-    }
-
-    public void deleteBookOfAuthor(Book book) {
-        List<Author> authors = _authorsLiveData.getValue();
-        for( Author author : authors ){
-            if( author.getId() == book.getAuthorId() ){
-                // Remove the book from the list of books of the author
-                author.removeBookById(book.getId());
-            }
-        }
-        _authorsLiveData.setValue(authors);
-    }
-
-    public void addBookToAuthor(Book bookAdded) {
-        List<Author> authors = _authorsLiveData.getValue();
-        for( Author author : authors ){
-            if( author.getId() == bookAdded.getAuthorId() ){
-                author.addBook(bookAdded);
-                Toast.makeText(getApplication(), "Book added to author "+bookAdded.getAuthorId(), Toast.LENGTH_SHORT).show();
-            }
-        }
-        _authorsLiveData.setValue(authors);
-    }
-
-    public String deleteAuthor(Integer authorIdDeleted) {
-        String lastNameOfAuthorDeleted = "";
-        List<Author> authors = _authorsLiveData.getValue();
-        for( Author author : authors ){
-            if( author.getId() == authorIdDeleted ){
-                lastNameOfAuthorDeleted = author.getLast_name();
-                authors.remove(author);
-                break;
-            }
-        }
-        _authorsLiveData.setValue(authors);
-        return lastNameOfAuthorDeleted;
-    }
 }

@@ -42,8 +42,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
         String bookTitle = books.get(position).getTitle();
-        Button btn_book = holder.getBookTitle();
+        Button btn_book = holder.get_bookTitle();
         btn_book.setText(bookTitle);
+
+        // Set up the button to save the book ID to display and navigate to the BookInformation fragment
         btn_book.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

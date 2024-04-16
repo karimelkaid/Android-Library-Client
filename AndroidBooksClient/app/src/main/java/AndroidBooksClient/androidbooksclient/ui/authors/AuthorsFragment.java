@@ -43,10 +43,20 @@ public class AuthorsFragment extends Fragment {
 
         setUpFab(); // Set up the floating action button to add an author
 
+        // We check whether we need to send a request to retrieve all the authors (if an author has been deleted)
+        _sharedViewModel.getReloadAuthorsLiveData().observe(getViewLifecycleOwner(), reloadAuthors -> {
+            if( reloadAuthors ){
+                _authorsViewModel.load_authors_from_api();
+            }
+        });
+
         // When the list of authors changes, refresh the list of authors in the RecyclerView
         _authorsViewModel.get_authors_live_data().observe(getViewLifecycleOwner(), authors -> {
             _authorAdapter = new AuthorAdapter(authors, _sharedViewModel);
             _recyclerView.setAdapter(_authorAdapter);
+            if( _sharedViewModel.getReloadAuthorsLiveData().getValue() ){
+                _sharedViewModel.setReloadAuthors(false); // We stop the reload of authors
+            }
         });
 
         // We check whether an author has been added in AddAuthorFragment to update the list of authorsLiveData
@@ -57,12 +67,7 @@ public class AuthorsFragment extends Fragment {
             }
         });
 
-        // We check whether we need to send a request to retrieve all the authors (if an author has been deleted)
-        _sharedViewModel.getReloadAuthorsLiveData().observe(getViewLifecycleOwner(), reloadAuthors -> {
-            if( reloadAuthors ){
-                _authorsViewModel.load_authors_from_api();
-            }
-        });
+
 
         return view;
     }

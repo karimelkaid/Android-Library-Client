@@ -35,7 +35,7 @@ public class AuthorAdapter extends RecyclerView.Adapter<AuthorViewHolder> {
     public void onBindViewHolder(@NonNull AuthorViewHolder holder, int position) {
         Author current_author = _authors.get(position); // Get the current author to display
 
-        Button btn_author = holder.get_btn_author_name();   // Get the button to display the author's name
+        Button btn_author = holder.get_btnAuthorName();   // Get the button to display the author's name
         btn_author.setText(current_author.getLast_name());  // Set the author's name in the button
 
         setUpAuthorInformationButton(btn_author, current_author);   // Set up the button to display the author's information

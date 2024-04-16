@@ -10,31 +10,46 @@ import AndroidBooksClient.androidbooksclient.Repository.BooksRepository;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 
 public class BookInformationsViewModel extends AndroidViewModel {
-    private BooksRepository repository;
-    private MutableLiveData<Book> bookMutableLiveData;
-    private MutableLiveData<Boolean> bookDeletedLiveData;
+    private BooksRepository _repository;
+    private MutableLiveData<Book> _bookMutableLiveData;
+    private MutableLiveData<Boolean> _bookDeletedLiveData;
     public BookInformationsViewModel(@NonNull Application application) {
         super(application);
-        repository = new BooksRepository(application);
-        bookMutableLiveData = new MutableLiveData<>();
-        bookDeletedLiveData = new MutableLiveData<>(false);
+        _repository = new BooksRepository(application);
+        _bookMutableLiveData = new MutableLiveData<>();
+        _bookDeletedLiveData = new MutableLiveData<>(false);
     }
 
-    public MutableLiveData<Book> getBookMutableLiveData(){
-        return bookMutableLiveData;
-    }
-    public void setBookMutableLiveData(Book book){
-        this.bookMutableLiveData.setValue(book);
-    }
-
-    public MutableLiveData<Boolean> getBookDeletedLiveData(){
-        return bookDeletedLiveData;
-    }
-    public void setBookDeletedLiveData(boolean b){
-        this.bookDeletedLiveData.setValue(b);
+    /*
+        loadBookToDisplay : proc :
+            Calls a method in the repository to send a request to get the book to display from the API
+        Parameter(s) :
+            int bookId : The id of the book to be fetched
+        Return :
+            void
+    */
+    public void loadBookToDisplay(int bookId){
+        _repository.getBook(bookId, _bookMutableLiveData);
     }
 
+    /*
+        deleteBook : proc :
+            Calls a method in the repository to send a request to delete a book from the API
+        Parameter(s) :
+            int bookId : The id of the book to be deleted
+        Return :
+            void
+    */
     public void deleteBook(int bookId){
-        repository.deleteBook(bookId, bookDeletedLiveData);
+        _repository.deleteBook(bookId, _bookDeletedLiveData);
+    }
+
+    // Getter(s)
+    public MutableLiveData<Book> get_bookMutableLiveData(){
+        return _bookMutableLiveData;
+    }
+
+    public MutableLiveData<Boolean> get_bookDeletedLiveData(){
+        return _bookDeletedLiveData;
     }
 }

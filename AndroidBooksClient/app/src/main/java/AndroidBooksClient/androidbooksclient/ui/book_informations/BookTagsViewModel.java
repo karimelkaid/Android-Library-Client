@@ -12,24 +12,31 @@ import AndroidBooksClient.androidbooksclient.Model.Tag;
 import AndroidBooksClient.androidbooksclient.Repository.BooksRepository;
 
 public class BookTagsViewModel extends AndroidViewModel {
-    BooksRepository repository;
-    MutableLiveData<List<Tag>> tags;
+    BooksRepository _repository;
+    MutableLiveData<List<Tag>> _tags;
     public BookTagsViewModel(@NonNull Application application) {
         super(application);
-        repository = new BooksRepository(application);
-        tags = new MutableLiveData<>();
+        _repository = new BooksRepository(application);
+        _tags = new MutableLiveData<>();
     }
 
+    /*
+        loadTags : proc :
+            Calls a method in the repository to send a request to get the tags from the API
+        Parameter(s) :
+            int bookId : The id of the book to be fetched
+        Return :
+            void
+    */
     public void loadTags(int bookId) {
-        repository.loadTags(bookId, tags);
+        _repository.loadTags(bookId, _tags);
     }
 
+    // Getter(s)
     public MutableLiveData<List<Tag>> getTagsMutableLiveData() {
-        return tags;
+        return _tags;
     }
-    public void setTagsMutableLiveData(List<Tag> tags) {
-        this.tags.setValue(tags);
-    }
+
 
 
 }

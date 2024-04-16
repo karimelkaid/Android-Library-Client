@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import AndroidBooksClient.androidbooksclient.R;
 
 public class TagViewHolder extends RecyclerView.ViewHolder{
-    TextView tv_tag_name;
+    TextView _tvTagName;
     public TagViewHolder(@NonNull View itemView) {
         super(itemView);
-        tv_tag_name = itemView.findViewById(R.id.tv_tag_name);
+        _tvTagName = itemView.findViewById(R.id.tv_tag_name);
     }
 
-    public void setTv_tag_name(String tag_name){
-        tv_tag_name.setText(tag_name);
+    public void set_tvTagName(String tag_name){
+        _tvTagName.setText(tag_name);
     }
 }

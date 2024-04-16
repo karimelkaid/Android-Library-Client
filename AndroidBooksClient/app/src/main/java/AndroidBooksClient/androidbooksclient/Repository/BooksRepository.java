@@ -240,4 +240,32 @@ public class BooksRepository {
         queue.add(request);
     }
 
+    public void getBook(int bookId, MutableLiveData<Book> bookMutableLiveData) {
+        String url = urlApi + "/books/"+bookId;
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Book book = translateJsonObjectToABookObject(response);
+                            bookMutableLiveData.setValue(book);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(application, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        queue.add(request);
+    }
 }

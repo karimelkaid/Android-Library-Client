@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import AndroidBooksClient.androidbooksclient.R;
 
 public class BookViewHolder extends RecyclerView.ViewHolder{
-    Button bookTitle;
+    Button _bookTitle;
     public BookViewHolder(@NonNull View itemView) {
         super(itemView);
-        bookTitle = itemView.findViewById(R.id.btn_books);   // Retrieving the button from the book_view_holder layout
+        _bookTitle = itemView.findViewById(R.id.btn_books);   // Retrieving the button from the book_view_holder layout
     }
 
     /*
@@ -23,7 +23,7 @@ public class BookViewHolder extends RecyclerView.ViewHolder{
         Return :
             bookTitle : The bookTitle button
     */
-    public Button getBookTitle(){
-        return bookTitle;
+    public Button get_bookTitle(){
+        return _bookTitle;
     }
 }

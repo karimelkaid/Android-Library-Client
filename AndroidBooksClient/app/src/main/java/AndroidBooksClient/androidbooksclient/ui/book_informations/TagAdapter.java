@@ -28,7 +28,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull TagViewHolder holder, int position) {
-        holder.setTv_tag_name(tags.get(position).getName());
+        holder.set_tvTagName(tags.get(position).getName());
     }
 
     @Override
