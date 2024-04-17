@@ -26,6 +26,7 @@ import java.util.List;
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 import AndroidBooksClient.androidbooksclient.Model.Tag;
+import AndroidBooksClient.androidbooksclient.Utils;
 
 public class BooksRepository {
     RequestQueue queue;
@@ -95,6 +96,7 @@ public class BooksRepository {
         }
         // When all the books have been added, I setValue in the livedata of the book list to
         // notify the observers that the books have been added in order to update the UI.
+        Utils.sortBookByTitle(books);
         booksLiveData.setValue(books);
     }
 

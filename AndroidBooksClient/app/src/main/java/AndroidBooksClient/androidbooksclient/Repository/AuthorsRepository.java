@@ -24,6 +24,7 @@ import java.util.List;
 
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.Model.Book;
+import AndroidBooksClient.androidbooksclient.Utils;
 
 public class AuthorsRepository {
     RequestQueue queue;
@@ -90,6 +91,7 @@ public class AuthorsRepository {
                 throw new RuntimeException(e);
             }
         }
+        Utils.sortAuhtorsByLastName(authors);
         authorsLiveData.setValue(authors);
     }
 

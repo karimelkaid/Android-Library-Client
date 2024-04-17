@@ -14,6 +14,7 @@ import java.util.List;
 
 import AndroidBooksClient.androidbooksclient.Repository.BooksRepository;
 import AndroidBooksClient.androidbooksclient.Model.Book;
+import AndroidBooksClient.androidbooksclient.Utils;
 
 public class BooksViewModel extends AndroidViewModel {
     BooksRepository _repository;
@@ -54,6 +55,7 @@ public class BooksViewModel extends AndroidViewModel {
     public void addBookToList(Book newBook) {
         List<Book> books = _booksLiveData.getValue();
         books.add(newBook);
+        Utils.sortBookByTitle(books);
         _booksLiveData.setValue(books);
     }
 

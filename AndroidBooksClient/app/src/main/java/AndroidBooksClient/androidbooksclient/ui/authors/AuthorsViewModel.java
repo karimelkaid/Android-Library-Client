@@ -16,6 +16,7 @@ import java.util.List;
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.Model.Book;
 import AndroidBooksClient.androidbooksclient.Repository.AuthorsRepository;
+import AndroidBooksClient.androidbooksclient.Utils;
 
 public class AuthorsViewModel extends AndroidViewModel {
     AuthorsRepository _authorsRepository;
@@ -55,30 +56,10 @@ public class AuthorsViewModel extends AndroidViewModel {
     public void addAuthorToList(Author newAuthor) {
         List<Author> authors = this._authorsLiveData.getValue();
         authors.add(newAuthor);
-        sortByLastName(authors);
+        Utils.sortAuhtorsByLastName(authors);
         _authorsLiveData.setValue(authors);
     }
-
-    /*
-        sortByLastName : proc :
-            Sorts the list of authors by last name
-        Parameter(s) :
-            List<Author> authors : The list of authors to be sorted
-        Return :
-            void
-    */
-    private void sortByLastName(List<Author> authors) {
-        for( int i = 0; i < authors.size(); i++ ){
-            for( int j = i+1; j < authors.size(); j++ ){
-                if( authors.get(i).getLast_name().compareTo(authors.get(j).getLast_name()) > 0 ){
-                    Author aux = authors.get(i);
-                    authors.set(i, authors.get(j));
-                    authors.set(j, aux);
-                }
-            }
-        }
-    }
-
+    
     // Getter(s)
     public MutableLiveData<List<Author>> get_authors_live_data() {
         return _authorsLiveData;
