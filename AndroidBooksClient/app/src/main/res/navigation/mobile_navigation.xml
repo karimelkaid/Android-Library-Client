@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_books"
         android:name="AndroidBooksClient.androidbooksclient.ui.books.BooksFragment"
-        android:label="@string/title_home"
+        android:label="@string/title_books"
         tools:layout="@layout/fragment_books">
         <action
             android:id="@+id/action_navigation_books_to_navigation_bookInformation"

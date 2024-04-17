@@ -12,7 +12,7 @@
     <string name="authors_name">"Author's name : "</string>
     <string name="a_book">A book</string>
     <string name="back">Back</string>
-    <string name="title_book_information">title_book_information</string>
+    <string name="title_book_information">Book\'s information</string>
     <string name="add_book">Add a book</string>
     <string name="delete">Delete</string>
     <string name="publication_year">"Publication year : "</string>
@@ -31,4 +31,7 @@
     <string name="lastname">Last name</string>
     <string name="add_author">Add author</string>
     <string name="tag_name">Tag\'s name</string>
+    <string name="tags">Tag(s)</string>
+    <string name="tags_">Tag(s) :</string>
+    <string name="title_books">Books</string>
 </resources>

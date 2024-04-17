@@ -11,9 +11,10 @@
         android:id="@+id/tv_bood_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="108dp"
         android:layout_marginTop="32dp"
         android:text="@string/id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.099"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,9 +22,10 @@
         android:id="@+id/tv_book_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="20dp"
         android:text="@string/book_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.114"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_bood_id" />
 
@@ -31,9 +33,10 @@
         android:id="@+id/tv_publication_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="28dp"
         android:text="@string/publication_year"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.129"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_book_title" />
 
@@ -65,23 +68,32 @@
         android:id="@+id/tv_author_of_book_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="32dp"
         android:text="@string/author_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.114"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_publication_year" />
+
+    <TextView
+        android:id="@+id/tv_tags_of_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="@string/tags_"
+        app:layout_constraintTop_toBottomOf="@+id/btn_back_book_information"
+        tools:layout_editor_absoluteX="28dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_tags_of_book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
-        android:layout_marginBottom="175dp"
-        android:background="#FFD400"
+        android:layout_marginBottom="136dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_delete_book" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_tags_of_book"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
