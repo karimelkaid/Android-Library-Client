@@ -30,12 +30,12 @@ import AndroidBooksClient.androidbooksclient.Utils;
 public class BooksRepository {
     RequestQueue queue;
     Application application;
-    private static final String adr_ip_pc_on_the_network = "localhost";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "192.168.1.9";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
     String urlApi = "http://"+ this.adr_ip_pc_on_the_network +":3000";
 
     public BooksRepository(Application application) {
         this.application = application;
-        queue = Volley.newRequestQueue(application);
+        queue = VolleySingleton.getInstance(application).getRequestQueue();
     }
 
     /*

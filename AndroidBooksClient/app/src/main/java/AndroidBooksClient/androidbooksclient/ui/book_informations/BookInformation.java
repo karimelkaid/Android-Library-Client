@@ -45,7 +45,7 @@ public class BookInformation extends Fragment {
         _bookTagsViewModel = new ViewModelProvider(requireActivity()).get(BookTagsViewModel.class);
 
         findComponents(view);
-        resetTextViews(view);
+        resetTextViews();
         _rvTags.setLayoutManager(new LinearLayoutManager(getContext()));
 
         setUpBackButton();
@@ -102,7 +102,7 @@ public class BookInformation extends Fragment {
         return view;
     }
 
-    private void resetTextViews(View view) {
+    private void resetTextViews() {
         _tvId.setText("ID : ");
         _tvTitle.setText("Title : ");
         _tvPublicationYear.setText("Publication year : ");
@@ -176,7 +176,12 @@ public class BookInformation extends Fragment {
                     public void onClick(View v) {
                         _sharedViewModel.set_loading(true);
                         _sharedViewModel.set_bookTitleToBeDeleted(_bookInformationsViewModel.get_bookMutableLiveData().getValue().getTitle());   // To show users the title of the book they have deleted.
+
                         _sharedViewModel.setPreviousFragmentIsBookInformation(true);    // To display a Toast that a book has been deleted only if the previous fragment is the details of a book (because books can also be deleted by deleting an author)
+
+                        _bookInformationsViewModel.set_authorNameLiveData(null);
+                        _bookInformationsViewModel.set_bookMutableLiveData(null);
+
                         _bookInformationsViewModel.deleteBook(bookId);
                     }
                 }
