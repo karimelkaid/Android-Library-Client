@@ -64,7 +64,14 @@ public class BookInformation extends Fragment {
             else{
                 this._tvPublicationYear.setText("No specified publication year");
             }
-            this._tvAuthorId.setText("Author ID : "+book.getAuthorId());
+            _bookInformationsViewModel.loadAuthor(book.getAuthorId());  // Load the author of the book to display his name and not his id
+        });
+
+        // When the author's name of the book is loaded, update the UI
+        _bookInformationsViewModel.get_authorNameLiveData().observe(getViewLifecycleOwner(), authorOfBook -> {
+            if( authorOfBook != null ){
+                this._tvAuthorId.setText("Author : " + Utils.toInitCap(authorOfBook.getFirst_name()) + " " + authorOfBook.getLast_name().toUpperCase());
+            }
         });
 
         // When the tags are loaded, update the RecyclerView with the tags

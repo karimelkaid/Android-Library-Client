@@ -1,7 +1,6 @@
 package AndroidBooksClient.androidbooksclient.Repository;
 
 import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,7 +30,7 @@ import AndroidBooksClient.androidbooksclient.Utils;
 public class BooksRepository {
     RequestQueue queue;
     Application application;
-    private static final String adr_ip_pc_on_the_network = "192.168.1.9";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
+    private static final String adr_ip_pc_on_the_network = "localhost";     // The IP address of the PC on the network (the phone and the PC must be on the same network), it can change so use this command to get the IP address on the network : ip addr show
     String urlApi = "http://"+ this.adr_ip_pc_on_the_network +":3000";
 
     public BooksRepository(Application application) {
@@ -255,6 +254,35 @@ public class BooksRepository {
                         try {
                             Book book = translateJsonObjectToABookObject(response);
                             bookMutableLiveData.setValue(book);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(application, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        queue.add(request);
+    }
+
+    public void getAuthor(int authorId, MutableLiveData<Author> authorOfBookLiveData) {
+        String url = urlApi + "/authors/"+authorId;
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Author author = new Author(response.getInt("id"), response.getString("firstname"), response.getString("lastname"), null);
+                            authorOfBookLiveData.setValue(author);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }

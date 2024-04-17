@@ -8,12 +8,20 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import AndroidBooksClient.androidbooksclient.Model.SpinnerItem;
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.SharedViewModel;
 import AndroidBooksClient.androidbooksclient.Utils;
@@ -23,7 +31,7 @@ public class AddBookFragment extends Fragment {
     private Button _btn_add_book;
     private EditText _et_book_title;
     private EditText _et_book_publication_year;
-    private EditText _et_book_author_id;
+    private Spinner _spAuthors;
 
     private SharedViewModel _sharedViewModel;
     private AddBookViewModel _addBookViewModel;
@@ -52,9 +60,45 @@ public class AddBookFragment extends Fragment {
             }
         });
 
+        _sharedViewModel.loadAuthors();
+        // When the authors are loaded, we fill the Spinner
+        _sharedViewModel.get_authorsLiveData().observe(getViewLifecycleOwner(), authors -> {
+            if( authors != null ){
+                setUpSpinnerAuthors();
+            }
+        });
+
         return view;
     }
 
+    private void setUpSpinnerAuthors() {
+
+        List<SpinnerItem> spinnerItems = new ArrayList<>();
+        for( int i = 0; i < _sharedViewModel.get_authorsLiveData().getValue().size(); i++ ){
+            SpinnerItem spinnerItem = new SpinnerItem(_sharedViewModel.get_authorsLiveData().getValue().get(i).getLast_name(), _sharedViewModel.get_authorsLiveData().getValue().get(i).getId());
+            spinnerItems.add(spinnerItem);
+        }
+
+        ArrayAdapter<SpinnerItem> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, spinnerItems);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _spAuthors.setAdapter(adapter);
+
+        _spAuthors.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SpinnerItem item = (SpinnerItem) parent.getSelectedItem();
+                int value = item.getValue();
+                _authorId = value;  // We save the author id to add the book to this author who is selected in the spinner
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+    }
 
 
     /*
@@ -82,7 +126,6 @@ public class AddBookFragment extends Fragment {
                         else{
                             publicationYear = -1;
                         }
-                        _authorId = Integer.parseInt(_et_book_author_id.getText().toString());
 
                         // Creating a JSON object to send to the server
                         JSONObject book_json_object = new JSONObject();
@@ -121,6 +164,6 @@ public class AddBookFragment extends Fragment {
         _btn_add_book = view.findViewById(R.id.btn_add_book);
         _et_book_title = view.findViewById(R.id.et_title);
         _et_book_publication_year = view.findViewById(R.id.et_publication_year);
-        _et_book_author_id = view.findViewById(R.id.et_author_id);
+        _spAuthors = view.findViewById(R.id.sp_authors);
     }
 }

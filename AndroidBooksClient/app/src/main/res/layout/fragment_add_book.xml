@@ -18,11 +18,10 @@
         android:layout_height="wrap_content"
         android:hint="@string/publication_year" />
 
-    <EditText
-        android:id="@+id/et_author_id"
+    <Spinner
+        android:id="@+id/sp_authors"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/author_id" />
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btn_add_book"

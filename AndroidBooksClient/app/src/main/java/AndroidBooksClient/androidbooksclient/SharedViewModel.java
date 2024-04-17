@@ -6,8 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.List;
+
 import AndroidBooksClient.androidbooksclient.Model.Author;
 import AndroidBooksClient.androidbooksclient.Model.Book;
+import AndroidBooksClient.androidbooksclient.Repository.AuthorsRepository;
 
 public class SharedViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> _selectedAuthor;
@@ -32,6 +35,9 @@ public class SharedViewModel extends AndroidViewModel {
     private Boolean _previousFragmentIsAuthorInformation;
     private Boolean _previousFragmentIsBooks;
 
+    private AuthorsRepository _authorsRepository;
+    private MutableLiveData<List<Author>> _authorsLiveData;
+
     public SharedViewModel(@NonNull Application application) {
         super(application);
         _selectedAuthor = new MutableLiveData<>();
@@ -47,6 +53,9 @@ public class SharedViewModel extends AndroidViewModel {
         _previousFragmentIsBookInformation = false;
         _previousFragmentIsAuthorInformation = false;
         _previousFragmentIsBooks = false;
+
+        _authorsRepository = new AuthorsRepository(application);
+        _authorsLiveData = new MutableLiveData<>(null);
     }
 
 
@@ -140,5 +149,16 @@ public class SharedViewModel extends AndroidViewModel {
     }
     public Boolean getPreviousFragmentIsBooks() {
         return _previousFragmentIsBooks;
+    }
+
+    public MutableLiveData<List<Author>> get_authorsLiveData() {
+        return _authorsLiveData;
+    }
+    public void set_authorsLiveData(List<Author> authors) {
+        _authorsLiveData.setValue(authors);
+    }
+
+    public void loadAuthors() {
+        _authorsRepository.load_authors_from_api(_authorsLiveData);
     }
 }

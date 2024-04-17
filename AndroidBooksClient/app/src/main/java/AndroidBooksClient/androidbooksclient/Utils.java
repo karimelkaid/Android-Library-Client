@@ -31,25 +31,30 @@ public class Utils {
 
     /*
         sortBooksByTitle : proc :
-            Sorts the list of books by title
+            Sorts the list of books by title in ascending order (case-insensitive)
         Parameter(s) :
             List<Book> books : The list of books to sort
         Return :
             void
     */
     public static void sortBookByTitle(List<Book> books){
-        books.sort((book1, book2) -> book1.getTitle().compareTo(book2.getTitle()));
+        books.sort((book1, book2) -> book1.getTitle().toLowerCase().compareTo(book2.getTitle().toLowerCase()));
     }
 
     /*
         sortAuhtorsByLastName : proc :
-            Sorts the list of authors by last name
+            Sorts the list of authors by last name in ascending order (case-insensitive)
         Parameter(s) :
             List<Author> authors : The list of authors to sort
         Return :
             void
     */
+
     public static void sortAuhtorsByLastName(List<Author> authors) {
-        authors.sort((author1, author2) -> author1.getLast_name().compareTo(author2.getLast_name()));
+        authors.sort((author1, author2) -> author1.getLast_name().toLowerCase().compareTo(author2.getLast_name().toLowerCase()));
+    }
+
+    public static String toInitCap(String text) {
+        return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
     }
 }
