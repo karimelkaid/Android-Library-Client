@@ -39,11 +39,13 @@ public class BookInformation extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_book_information, container, false);
 
+
         _sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         _bookInformationsViewModel = new ViewModelProvider(requireActivity()).get(BookInformationsViewModel.class);
         _bookTagsViewModel = new ViewModelProvider(requireActivity()).get(BookTagsViewModel.class);
 
         findComponents(view);
+        resetTextViews(view);
         _rvTags.setLayoutManager(new LinearLayoutManager(getContext()));
 
         setUpBackButton();
@@ -56,6 +58,10 @@ public class BookInformation extends Fragment {
 
         // When the book is loaded, update the UI
         _bookInformationsViewModel.get_bookMutableLiveData().observe(getViewLifecycleOwner(), book -> {
+            if( book == null ){
+                return;
+            }
+
             this._tvId.setText("ID : "+book.getId());
             this._tvTitle.setText("Title : "+book.getTitle());
             if(book.getPublication_year() != -1){
@@ -64,13 +70,15 @@ public class BookInformation extends Fragment {
             else{
                 this._tvPublicationYear.setText("No specified publication year");
             }
+            _sharedViewModel.set_loading(true);
             _bookInformationsViewModel.loadAuthor(book.getAuthorId());  // Load the author of the book to display his name and not his id
         });
 
         // When the author's name of the book is loaded, update the UI
         _bookInformationsViewModel.get_authorNameLiveData().observe(getViewLifecycleOwner(), authorOfBook -> {
-            if( authorOfBook != null ){
+            if( authorOfBook != null && _sharedViewModel.get_loading() ){
                 this._tvAuthorId.setText("Author : " + Utils.toInitCap(authorOfBook.getFirst_name()) + " " + authorOfBook.getLast_name().toUpperCase());
+                _sharedViewModel.set_loading(false);
             }
         });
 
@@ -94,6 +102,13 @@ public class BookInformation extends Fragment {
         return view;
     }
 
+    private void resetTextViews(View view) {
+        _tvId.setText("ID : ");
+        _tvTitle.setText("Title : ");
+        _tvPublicationYear.setText("Publication year : ");
+        _tvAuthorId.setText("Author : ");
+    }
+
     /*
         setUpBackButton : proc :
             Sets up the back button to navigate to the Books fragment
@@ -107,6 +122,8 @@ public class BookInformation extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        _bookInformationsViewModel.set_authorNameLiveData(null);
+                        _bookInformationsViewModel.set_bookMutableLiveData(null);
                         if( _sharedViewModel.getPreviousFragmentIsBooks() ){
                             Utils.navigateTo(v.getContext(), R.id.action_navigation_bookInformation_to_navigation_books);
                             _sharedViewModel.setPreviousFragmentIsBooks(false);

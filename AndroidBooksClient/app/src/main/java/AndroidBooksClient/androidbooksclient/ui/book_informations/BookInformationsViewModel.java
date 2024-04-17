@@ -55,6 +55,9 @@ public class BookInformationsViewModel extends AndroidViewModel {
     public MutableLiveData<Book> get_bookMutableLiveData(){
         return _bookMutableLiveData;
     }
+    public void set_bookMutableLiveData(Book book){
+        _bookMutableLiveData.setValue(book);
+    }
 
     public MutableLiveData<Boolean> get_bookDeletedLiveData(){
         return _bookDeletedLiveData;
