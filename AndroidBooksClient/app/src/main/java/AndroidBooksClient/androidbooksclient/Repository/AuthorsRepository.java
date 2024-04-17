@@ -91,7 +91,6 @@ public class AuthorsRepository {
             }
         }
         authorsLiveData.setValue(authors);
-        Toast.makeText(application, "Authors loaded from the API !", Toast.LENGTH_SHORT).show();
     }
 
 

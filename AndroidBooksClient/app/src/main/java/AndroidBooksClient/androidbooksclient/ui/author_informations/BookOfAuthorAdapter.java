@@ -1,15 +1,10 @@
 package AndroidBooksClient.androidbooksclient.ui.author_informations;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -45,7 +40,7 @@ public class BookOfAuthorAdapter extends RecyclerView.Adapter<BookOfAuthorViewHo
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _sharedViewModel.setSelectedBookId(current_book.getId());   // Save the book's id in the shared view model
+                        _sharedViewModel.set_selectedBookId(current_book.getId());   // Save the book's id in the shared view model
                         Utils.navigateTo(v.getContext(), R.id.action_navigation_author_informations_to_navigation_bookInformation); // Navigate to the BookInformationFragment
                     }
                 }

@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,12 +41,9 @@ public class AddAuthorFragment extends Fragment {
         // This piece of code will be executed when an author has been added to the API, to notify
         // the AuthorsFragment that an author has been added so that they can update their UI.
         _addAuthorViewModel.get_authorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
-            if (_sharedViewModel.getLoading() && authorAdded != null) {
-                Toast.makeText(getContext(), "Author added successfully", Toast.LENGTH_SHORT).show();
-                _sharedViewModel.setAuthorAddedMutableLiveData(authorAdded);
+            if (_sharedViewModel.get_loading() && authorAdded != null) {
+                _sharedViewModel.set_authorAddedMutableLiveData(authorAdded);
                 navigateTo(getActivity(), R.id.action_navigation_add_author_fragment_to_navigation_authors);
-            } else {
-                Toast.makeText(getContext(), "Author not added", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -68,7 +64,7 @@ public class AddAuthorFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _sharedViewModel.setLoading(true);
+                        _sharedViewModel.set_loading(true);
                         JSONObject authorJSONObject = createAuthorJSONObject();
                         try {
                             _addAuthorViewModel.addAuthor(authorJSONObject);

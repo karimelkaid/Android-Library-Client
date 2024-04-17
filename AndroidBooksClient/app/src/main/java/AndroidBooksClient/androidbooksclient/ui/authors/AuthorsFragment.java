@@ -44,7 +44,7 @@ public class AuthorsFragment extends Fragment {
         setUpFab(); // Set up the floating action button to add an author
 
         // We check whether we need to send a request to retrieve all the authors (if an author has been deleted)
-        _sharedViewModel.getReloadAuthorsLiveData().observe(getViewLifecycleOwner(), reloadAuthors -> {
+        _sharedViewModel.get_reloadAuthorsLiveData().observe(getViewLifecycleOwner(), reloadAuthors -> {
             if( reloadAuthors ){
                 _authorsViewModel.load_authors_from_api();
             }
@@ -54,16 +54,19 @@ public class AuthorsFragment extends Fragment {
         _authorsViewModel.get_authors_live_data().observe(getViewLifecycleOwner(), authors -> {
             _authorAdapter = new AuthorAdapter(authors, _sharedViewModel);
             _recyclerView.setAdapter(_authorAdapter);
-            if( _sharedViewModel.getReloadAuthorsLiveData().getValue() ){
+            if( _sharedViewModel.get_reloadAuthorsLiveData().getValue() ){
                 _sharedViewModel.setReloadAuthors(false); // We stop the reload of authors
+                _sharedViewModel.set_loading(false); // We stop the loading
+                Toast.makeText(getContext(), "Author '"+_sharedViewModel.getAuthorLastNameToBeDeleted()+"' deleted", Toast.LENGTH_SHORT).show();   // Display a toast message to inform the user that the author has been deleted
             }
         });
 
         // We check whether an author has been added in AddAuthorFragment to update the list of authorsLiveData
-        _sharedViewModel.getAuthorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
-            if (authorAdded != null && _sharedViewModel.getLoading()) {
+        _sharedViewModel.get_authorAddedMutableLiveData().observe(getViewLifecycleOwner(), authorAdded -> {
+            if (authorAdded != null && _sharedViewModel.get_loading()) {
                 _authorsViewModel.addAuthorToList(authorAdded);
-                _sharedViewModel.setLoading(false);
+                _sharedViewModel.set_loading(false);
+                Toast.makeText(getContext(), "Author '"+authorAdded.getLast_name()+"' added", Toast.LENGTH_SHORT).show();   // Display a toast message to inform the user that the author has been added
             }
         });
 

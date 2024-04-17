@@ -52,4 +52,5 @@ public class BookInformationsViewModel extends AndroidViewModel {
     public MutableLiveData<Boolean> get_bookDeletedLiveData(){
         return _bookDeletedLiveData;
     }
+
 }

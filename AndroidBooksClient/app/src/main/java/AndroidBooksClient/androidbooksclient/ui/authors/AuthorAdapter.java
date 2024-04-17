@@ -57,7 +57,7 @@ public class AuthorAdapter extends RecyclerView.Adapter<AuthorViewHolder> {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _sharedViewModel.setSelectedAuthor(author.getId());
+                        _sharedViewModel.set_selectedAuthor(author.getId());
                         Utils.navigateTo(v.getContext(), R.id.action_navigation_authors_to_navigation_author_informations);
                     }
                 }

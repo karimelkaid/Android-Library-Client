@@ -37,12 +37,12 @@ public class AuthorInformationFragment extends Fragment {
         _sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         _authorBooksViewModel = new ViewModelProvider(requireActivity()).get(AuthorBooksViewModel.class);
 
-        int authorId = _sharedViewModel.getSelectedAuthor().getValue(); // Get the author ID to display from the shared view model
+        int authorId = _sharedViewModel.get_selectedAuthor().getValue(); // Get the author ID to display from the shared view model
 
         setUpDeleteButton(authorId);
 
         _authorInformationsViewModel.getAuthorDeleted().observe(getViewLifecycleOwner(), authorDeleted -> {
-            if( _sharedViewModel.getLoading() ){
+            if( _sharedViewModel.get_loading() ){
                 if( authorDeleted == true ){
                     _sharedViewModel.setReloadAuthors(true);
                     _sharedViewModel.setReloadBooks(true);
@@ -86,7 +86,8 @@ public class AuthorInformationFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _sharedViewModel.setLoading(true);
+                        _sharedViewModel.set_loading(true);
+                        _sharedViewModel.set_authorLastNameToBeDeleted(_authorInformationsViewModel.get_authorLiveData().getValue().getLast_name());
                         _authorInformationsViewModel.deleteAuthor(authorId);
                     }
                 }

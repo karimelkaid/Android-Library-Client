@@ -46,7 +46,7 @@ public class AddBookFragment extends Fragment {
         _addBookViewModel.getBookToAddMutableLiveData().observe(getViewLifecycleOwner(), bookAdded -> {
             // Given that there are several fragments observing the same object, after adding an object, if you come to this fragment this code will be launched to add a new book similar to the previous one
             // To solve this problem, check that you are currently making changes (using getLoading)
-            if( bookAdded != null && _sharedViewModel.getLoading() ){
+            if( bookAdded != null && _sharedViewModel.get_loading() ){
                 _sharedViewModel.setBookToAddMutable(bookAdded);
                 Utils.navigateTo(getActivity(), R.id.action_navigation_addBook_to_navigation_books);; // Go to the books fragment because there is no need to stay in the add book fragment after adding a book
             }
@@ -70,7 +70,7 @@ public class AddBookFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _sharedViewModel.setLoading(true);
+                        _sharedViewModel.set_loading(true);
 
                         // Retrieving information from the EditTexts
                         String title = _et_book_title.getText().toString();

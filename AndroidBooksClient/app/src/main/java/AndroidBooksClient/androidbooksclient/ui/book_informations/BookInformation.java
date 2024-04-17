@@ -46,10 +46,10 @@ public class BookInformation extends Fragment {
         _rvTags.setLayoutManager(new LinearLayoutManager(getContext()));
 
         setUpBackButton();
-        setUpDeleteBookButton(_sharedViewModel.getSelectedBookId().getValue());
+        setUpDeleteBookButton(_sharedViewModel.get_selectedBookId().getValue());
 
 
-        int bookId = _sharedViewModel.getSelectedBookId().getValue();
+        int bookId = _sharedViewModel.get_selectedBookId().getValue();
         _bookInformationsViewModel.loadBookToDisplay(bookId);
         _bookTagsViewModel.loadTags(bookId);
 
@@ -77,8 +77,7 @@ public class BookInformation extends Fragment {
 
         // When the book is deleted, save the book id which has been deleted (to update the UI in the Books fragment) and navigate to the Books fragment
         _bookInformationsViewModel.get_bookDeletedLiveData().observe(getViewLifecycleOwner(), bookDeleted -> {
-            if(_sharedViewModel.getLoading() && bookDeleted){
-                //_sharedViewModel.setBookDeletedIdMutableLiveData(bookId);
+            if(_sharedViewModel.get_loading() && bookDeleted){
                 _sharedViewModel.setReloadBooks(true);
                 Utils.navigateTo(getActivity(), R.id.action_navigation_bookInformation_to_navigation_books);
             }
@@ -140,7 +139,9 @@ public class BookInformation extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _sharedViewModel.setLoading(true);
+                        _sharedViewModel.set_loading(true);
+                        _sharedViewModel.set_bookTitleToBeDeleted(_bookInformationsViewModel.get_bookMutableLiveData().getValue().getTitle());   // To show users the title of the book they have deleted.
+                        _sharedViewModel.setPreviousFragmentIsBookInformation(true);    // To display a Toast that a book has been deleted only if the previous fragment is the details of a book (because books can also be deleted by deleting an author)
                         _bookInformationsViewModel.deleteBook(bookId);
                     }
                 }
