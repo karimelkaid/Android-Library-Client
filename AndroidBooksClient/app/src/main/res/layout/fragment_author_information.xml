@@ -32,6 +32,13 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/btn_back_to_authors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/back" />
+
+        <Button
             android:id="@+id/btn_delete_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

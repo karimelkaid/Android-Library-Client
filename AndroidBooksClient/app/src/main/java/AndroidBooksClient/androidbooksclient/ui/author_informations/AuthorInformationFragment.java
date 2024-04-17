@@ -24,6 +24,7 @@ public class AuthorInformationFragment extends Fragment {
     private TextView _tvAuthorFirstName;
     private TextView _tvAuthorLastName;
     private Button _btnDeleteAuthor;
+    private Button _btnBackToAuthors;
     private RecyclerView _rvBooksOfAuthor;
 
     @Override
@@ -39,6 +40,7 @@ public class AuthorInformationFragment extends Fragment {
 
         int authorId = _sharedViewModel.get_selectedAuthor().getValue(); // Get the author ID to display from the shared view model
 
+        setUpBackToAuthorsButton();
         setUpDeleteButton(authorId);
 
         _authorInformationsViewModel.getAuthorDeleted().observe(getViewLifecycleOwner(), authorDeleted -> {
@@ -74,6 +76,25 @@ public class AuthorInformationFragment extends Fragment {
     }
 
     /*
+        setUpBackToAuthorsButton : proc :
+            Sets up the back to authors button to navigate back to the authors fragment
+        Parameter(s) :
+            void
+        Return :
+            void
+    */
+    private void setUpBackToAuthorsButton() {
+        _btnBackToAuthors.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Utils.navigateTo(getContext(), R.id.action_navigation_author_informations_to_navigation_authors2);
+                    }
+                }
+        );
+    }
+
+    /*
         setUpDeleteButton : proc :
             Sets up the delete button to delete an author
         Parameter(s) :
@@ -82,7 +103,7 @@ public class AuthorInformationFragment extends Fragment {
             void
     */
     private void setUpDeleteButton(int authorId) {
-        this._btnDeleteAuthor.setOnClickListener(
+        _btnDeleteAuthor.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -107,6 +128,7 @@ public class AuthorInformationFragment extends Fragment {
         _tvAuthorFirstName = view.findViewById(R.id.tv_author_first_name);
         _tvAuthorLastName = view.findViewById(R.id.tv_author_last_name);
         _rvBooksOfAuthor = view.findViewById(R.id.rv_books_of_author);
-        this._btnDeleteAuthor = view.findViewById(R.id.btn_delete_author);
+        _btnDeleteAuthor = view.findViewById(R.id.btn_delete_author);
+        _btnBackToAuthors = view.findViewById(R.id.btn_back_to_authors);
     }
 }

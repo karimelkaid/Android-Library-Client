@@ -41,6 +41,7 @@ public class BookOfAuthorAdapter extends RecyclerView.Adapter<BookOfAuthorViewHo
                     @Override
                     public void onClick(View v) {
                         _sharedViewModel.set_selectedBookId(current_book.getId());   // Save the book's id in the shared view model
+                        _sharedViewModel.setPreviousFragmentIsAuthorInformation(true);
                         Utils.navigateTo(v.getContext(), R.id.action_navigation_author_informations_to_navigation_bookInformation); // Navigate to the BookInformationFragment
                     }
                 }

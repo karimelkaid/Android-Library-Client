@@ -28,6 +28,10 @@ public class SharedViewModel extends AndroidViewModel {
 
     private Boolean _previousFragmentIsBookInformation; // To display a Toast that a book has been deleted only if the previous fragment is the details of a book (because books can also be deleted by deleting an author)
 
+    // To find out which fragment to navigate to, the BookInformation fragment can be accessed via 2 paths
+    private Boolean _previousFragmentIsAuthorInformation;
+    private Boolean _previousFragmentIsBooks;
+
     public SharedViewModel(@NonNull Application application) {
         super(application);
         _selectedAuthor = new MutableLiveData<>();
@@ -41,6 +45,8 @@ public class SharedViewModel extends AndroidViewModel {
         _bookTitleToBeDeleted = "";
         _authorLastNameToBeDeleted = "";
         _previousFragmentIsBookInformation = false;
+        _previousFragmentIsAuthorInformation = false;
+        _previousFragmentIsBooks = false;
     }
 
 
@@ -120,5 +126,19 @@ public class SharedViewModel extends AndroidViewModel {
     }
     public Boolean getPreviousFragmentIsBookInformation() {
         return _previousFragmentIsBookInformation;
+    }
+
+    public void setPreviousFragmentIsAuthorInformation(Boolean b) {
+        _previousFragmentIsAuthorInformation = b;
+    }
+    public Boolean getPreviousFragmentIsAuthorInformation() {
+        return _previousFragmentIsAuthorInformation;
+    }
+
+    public void setPreviousFragmentIsBooks(Boolean b) {
+        _previousFragmentIsBooks = b;
+    }
+    public Boolean getPreviousFragmentIsBooks() {
+        return _previousFragmentIsBooks;
     }
 }

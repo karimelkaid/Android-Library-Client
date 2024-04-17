@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_navigation_bookInformation_to_navigation_books"
             app:destination="@id/navigation_books" />
+        <action
+            android:id="@+id/action_navigation_bookInformation_to_navigation_author_informations"
+            app:destination="@id/navigation_author_informations" />
     </fragment>
 
     <fragment

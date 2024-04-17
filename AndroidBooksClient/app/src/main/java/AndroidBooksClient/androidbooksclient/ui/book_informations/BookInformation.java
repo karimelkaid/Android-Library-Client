@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import AndroidBooksClient.androidbooksclient.R;
 import AndroidBooksClient.androidbooksclient.SharedViewModel;
@@ -99,7 +100,17 @@ public class BookInformation extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Utils.navigateTo(v.getContext(), R.id.action_navigation_bookInformation_to_navigation_books);
+                        if( _sharedViewModel.getPreviousFragmentIsBooks() ){
+                            Utils.navigateTo(v.getContext(), R.id.action_navigation_bookInformation_to_navigation_books);
+                            _sharedViewModel.setPreviousFragmentIsBooks(false);
+                        }
+                        else if( _sharedViewModel.getPreviousFragmentIsAuthorInformation() ){
+                            Utils.navigateTo(v.getContext(), R.id.action_navigation_bookInformation_to_navigation_author_informations);
+                            _sharedViewModel.setPreviousFragmentIsAuthorInformation(false);
+                        }
+                        else{
+                            Toast.makeText(getContext(), "Error : No previous fragment found", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
         );

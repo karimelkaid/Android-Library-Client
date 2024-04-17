@@ -43,6 +43,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
             @Override
             public void onClick(View v) {
                 sharedViewModel.set_selectedBookId(books.get(position).getId());
+                sharedViewModel.setPreviousFragmentIsBooks(true);
                 Utils.navigateTo(v.getContext(), R.id.action_navigation_books_to_navigation_bookInformation);
             }
         });
