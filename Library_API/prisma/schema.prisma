@@ -24,6 +24,7 @@ model Book {
   author           Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId         Int
   tags             Tag[]
+  rating           Int?
 }
 
 model Tag {

@@ -1,15 +1,22 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { HttpError } from './error';
-import { StructError } from 'superstruct';
+import express, {NextFunction, Request, Response} from 'express';
+import {HttpError} from './error';
+import {StructError} from 'superstruct';
 
 import * as author from './requestHandlers/author';
 import * as book from './requestHandlers/book';
 import * as tag from './requestHandlers/tag';
+import cors from 'cors';
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+
+app.use(cors());
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.header('Access-Control-Expose-Headers', 'X-Total-Count');
+    next();
+});
 
 app.get('/authors', author.get_all);
 app.get('/authors/:author_id', author.get_one);
@@ -34,13 +41,16 @@ app.post('/books/:book_id/tags/:tag_id', tag.add_one_to_book);
 app.delete('/books/:book_id/tags/:tag_id', tag.remove_one_from_book);
 
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof StructError) {
-    err.status = 400;
-    err.message = `Bad value for field ${err.key}`;
-  }
-  return res.status(err.status ?? 500).send(err.message);
+    res.header('Access-Control-Expose-Headers', 'X-Total-Count');
+    next();
+
+    if (err instanceof StructError) {
+        err.status = 400;
+        err.message = `Bad value for field ${err.key}`;
+    }
+    return res.status(err.status ?? 500).send(err.message);
 });
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+    console.log(`App listening on port ${port}`);
 });
